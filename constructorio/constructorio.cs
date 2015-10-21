@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ConstructorIOClient {
   public class ConstructorIO {
@@ -22,19 +23,13 @@ namespace ConstructorIOClient {
       return string.Join("&", list);
     }
 
-    public static string makeUrl(string endpoint) {
+    public static string makeUrl(string endpoint, IDictionary<string, string> paramDict=new Dictionary<string, string>()) {
     }
 
-    public static string makeUrl(string endpoint, IDictionary<string, string> params) {
+    public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> paramDict = new Dictionary<string, string>()) {
     }
 
-    public static string createItemParams(string itemName, string autocompleteSection, bool isTracking) {
-    }
-
-    public static string createItemParams(string itemName, string autocompleteSection, IDictionary<string, string> otherJsonParams, bool isTracking) {
-    }
-
-    private static boolean checkResponse(resp, int expectedStatus) {
+    private static bool checkResponse(int resp, int expectedStatus) {
     }
 
     public string[] query(string queryStr) {
