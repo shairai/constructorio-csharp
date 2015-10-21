@@ -23,37 +23,52 @@ namespace ConstructorIOClient {
       return string.Join("&", list);
     }
 
-    public static string makeUrl(string endpoint, IDictionary<string, string> paramDict=new Dictionary<string, string>()) {
+    public static string makeUrl(string endpoint, IDictionary<string, string> paramDict) {
+      return "boinkadoinka";
     }
 
-    public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> paramDict = new Dictionary<string, string>()) {
+    public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> paramDict) {
+      return "boinkamoinka";
     }
 
     private static bool checkResponse(int resp, int expectedStatus) {
+      return true;
     }
 
     public string[] query(string queryStr) {
+      return new string[] {"boinka", "woinka", "moinka"};
     }
 
     public bool verify() {
+      return true;
     }
 
     public bool addItem(string itemName, string autocompleteSection) {
+      return true;
     }
 
     public bool removeItem(string itemName, string autocompleteSection) {
+      return true;
     }
 
     public bool modifyItem(string itemName, string autocompleteSection) {
+      return true;
     }
 
     public bool trackConversion(string term, string autocompleteSection) {
+      return true;
     }
 
     public bool trackClickThrough(string term, string autocompleteSection) {
+      return true;
     }
 
     public bool trackSearch(string term) {
+      return true;
+    }
+
+    public static void Main() {
+      Console.WriteLine("boinka doinka");
     }
 
   }
