@@ -35,50 +35,62 @@ namespace ConstructorIOClient {
       return String.Format("{0}://{1}/{2}?{3}", urlMembers);
     }
 
-    public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> paramDict) {
-      return "boinkamoinka";
-      /////////////////////
-      /////////////////////
-      /////////////////////
-    }
-
-    private static bool checkResponse(int resp, int expectedStatus) {
-      return true;
-      /////////////////////
-      /////////////////////
-      /////////////////////
-    }
-
-    private static bool makePostReq(IDictionary<string, string> values) {
-      using (var client = new HttpClient()) {
-        var content = new FormUrlEncodedContent(values); // no! jsonified!
-        // gotta do auth
-        // need to send the created item / term params, and they have to be in text and json, basically
-
+    public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
+      Dictionary<string, string> paramDict = new Dictionary<string, string>();
+      paramDict.put("item_name", itemName);
+      paramDict.put("autocomplete_section", autocompleteSection);
+      if (otherParams != null) {
+        paramDict.putAll(otherParams);
       }
+      string serialized = json serialization /////////////
+      return serialized;
+    }
+
+    private static bool checkResponse(HttpWebResponse resp, int expectedStatus) {
+      // you must also catch the WebException!
+      return ((int) resp.StatusCode) == expectedStatus;
+    }
+
+    private static HttpWebResponse makePostReq(IDictionary<string, string> values) {
+      using (WebClient wc = new WebClient()) {
+        try {
+          string jsonParams = jsonify that crap
+          wc.Headers[HttpRequestHeader.ContentType] = "application/json";
+          // auth goes here, too
+          wc.UploadString(URI, jsonParams);
+        } catch (WebException we) {
+          //
+        }
+      }
+    }
+
+    private static HttpWebResponse makeGetReq(IDictionary<string, string> values) {
+      ////////////////////
     }
 
     public List<string> query(string queryStr) {
       List<string> res = new List<string>();
+      HttpWebResponse response = this.makeGetReq(queryDict);
+      var encoding = ASCIIEncoding.ASCII;
+      using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding)) {
+        string responseText = reader.ReadToEnd();
+        parse the json, stick the "suggestions" into res ////////////////
+      }
       return res;
-      /////////////////////
-      /////////////////////
-      /////////////////////
     }
 
     public bool verify() {
-      return true;
-      /////////////////////
-      /////////////////////
-      /////////////////////
+      HttpWebResponse response = this.makePostReq(queryDict);
+      return this.checkResponse(response, 200);
     }
 
     public bool addItem(string itemName, string autocompleteSection) {
-      return true;
-      /////////////////////
-      /////////////////////
-      /////////////////////
+      //// assemble the some shit!
+      HttpWebResponse response = this.makePostReq(some shit); ///////////
+      return this.checkResponse(response, 200);
     }
+
+    ///// get to here, copy and paste
 
     public bool removeItem(string itemName, string autocompleteSection) {
       return true;
