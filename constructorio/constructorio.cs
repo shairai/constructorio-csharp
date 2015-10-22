@@ -26,15 +26,27 @@ namespace ConstructorIOClient {
 
     public static string makeUrl(string endpoint, IDictionary<string, string> paramDict) {
       paramDict.put("autocomplete_key", this.autocompleteKey);
-      return a format string of all this crap
+      string[] urlMembers = new int[] {
+        this.protocol,
+        this.host,
+        endpoint,
+        this.serializeParams(paramDict)
+      };
+      return String.Format("{0}://{1}/{2}?{3}", urlMembers);
     }
 
     public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> paramDict) {
       return "boinkamoinka";
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     private static bool checkResponse(int resp, int expectedStatus) {
       return true;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     private static bool makePostReq(IDictionary<string, string> values) {
@@ -49,34 +61,58 @@ namespace ConstructorIOClient {
     public List<string> query(string queryStr) {
       List<string> res = new List<string>();
       return res;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     public bool verify() {
       return true;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     public bool addItem(string itemName, string autocompleteSection) {
       return true;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     public bool removeItem(string itemName, string autocompleteSection) {
       return true;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     public bool modifyItem(string itemName, string autocompleteSection) {
       return true;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     public bool trackConversion(string term, string autocompleteSection) {
       return true;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     public bool trackClickThrough(string term, string autocompleteSection) {
       return true;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     public bool trackSearch(string term) {
       return true;
+      /////////////////////
+      /////////////////////
+      /////////////////////
     }
 
     public static void Main() {
