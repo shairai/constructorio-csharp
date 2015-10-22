@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.Net;
 
 namespace ConstructorIOClient {
   public class ConstructorIO {
@@ -24,9 +24,9 @@ namespace ConstructorIOClient {
       return string.Join("&", list);
     }
 
-    public static string makeUrl(string endpoint, IDictionary<string, string> paramDict) {
-      paramDict.put("autocomplete_key", this.autocompleteKey);
-      string[] urlMembers = new int[] {
+    public string makeUrl(string endpoint, IDictionary<string, string> paramDict) {
+      paramDict.Add("autocomplete_key", this.autocompleteKey);
+      string[] urlMembers = new string[] {
         this.protocol,
         this.host,
         endpoint,
@@ -38,13 +38,15 @@ namespace ConstructorIOClient {
     public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
       Dictionary<string, string> paramDict = new Dictionary<string, string>();
       if (isTracking) {
-        paramDict.put("term", itemName);
+        paramDict.Add("term", itemName);
       } else {
-        paramDict.put("item_name", itemName);
+        paramDict.Add("item_name", itemName);
       }
-      paramDict.put("autocomplete_section", autocompleteSection);
+      paramDict.Add("autocomplete_section", autocompleteSection);
       if (otherParams != null) {
-        paramDict.putAll(otherParams);
+        foreach (var otherParam in otherParams) {
+          paramDict.Add(otherParam.Key, otherParam.Value);
+        }
       }
       JObject jobj = new JObject(paramDict);
       string serialized = jobj.toString();
@@ -56,7 +58,7 @@ namespace ConstructorIOClient {
       return ((int) resp.StatusCode) == expectedStatus;
     }
 
-    private static HttpWebResponse makePostReq(string url, IDictionary<string, string> values) {
+    private HttpWebResponse makePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
         try {
           JObject jobj = new JObject(values);
@@ -72,7 +74,7 @@ namespace ConstructorIOClient {
       }
     }
 
-    private static HttpWebResponse makeGetReq(string url, IDictionary<string, string> values) {
+    private HttpWebResponse makeGetReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
         try {
           JObject jobj = new JObject(values);
