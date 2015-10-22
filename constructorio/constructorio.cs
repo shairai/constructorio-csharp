@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace ConstructorIOClient {
   public class ConstructorIO {
@@ -34,6 +35,15 @@ namespace ConstructorIOClient {
 
     private static bool checkResponse(int resp, int expectedStatus) {
       return true;
+    }
+
+    private static bool makePostReq(IDictionary<string, string> values) {
+      using (var client = new HttpClient()) {
+        var content = new FormUrlEncodedContent(values); // no! jsonified!
+        // gotta do auth
+        // need to send the created item / term params, and they have to be in text and json, basically
+
+      }
     }
 
     public List<string> query(string queryStr) {
