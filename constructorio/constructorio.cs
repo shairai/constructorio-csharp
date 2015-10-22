@@ -24,7 +24,8 @@ namespace ConstructorIOClient {
     }
 
     public static string makeUrl(string endpoint, IDictionary<string, string> paramDict) {
-      return "boinkadoinka";
+      paramDict.put("autocomplete_key", this.autocompleteKey);
+      return a format string of all this crap
     }
 
     public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> paramDict) {
@@ -35,8 +36,9 @@ namespace ConstructorIOClient {
       return true;
     }
 
-    public string[] query(string queryStr) {
-      return new string[] {"boinka", "woinka", "moinka"};
+    public List<string> query(string queryStr) {
+      List<string> res = new List<string>();
+      return res;
     }
 
     public bool verify() {
