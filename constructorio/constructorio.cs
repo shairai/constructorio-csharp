@@ -37,12 +37,17 @@ namespace ConstructorIOClient {
 
     public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
       Dictionary<string, string> paramDict = new Dictionary<string, string>();
-      paramDict.put("item_name", itemName);
+      if (isTracking) {
+        paramDict.put("term", itemName);
+      } else {
+        paramDict.put("item_name", itemName);
+      }
       paramDict.put("autocomplete_section", autocompleteSection);
       if (otherParams != null) {
         paramDict.putAll(otherParams);
       }
-      string serialized = json serialization /////////////
+      JObject jobj = new JObject(paramDict);
+      string serialized = jobj.toString();
       return serialized;
     }
 
@@ -54,7 +59,8 @@ namespace ConstructorIOClient {
     private static HttpWebResponse makePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
         try {
-          string jsonParams = jsonify that crap
+          JObject jobj = new JObject(values);
+          string jsonparams = jobj.toString();
           wc.Headers[HttpRequestHeader.ContentType] = "application/json";
           string creds = Convert.ToBase64String(
               Encoding.ASCII.GetBytes(this.apiToken + ":"));
@@ -67,7 +73,19 @@ namespace ConstructorIOClient {
     }
 
     private static HttpWebResponse makeGetReq(string url, IDictionary<string, string> values) {
-      ////////////////////
+      using (WebClient wc = new WebClient()) {
+        try {
+          JObject jobj = new JObject(values);
+          string jsonparams = jobj.toString();
+          wc.Headers[HttpRequestHeader.ContentType] = "application/json";
+          string creds = Convert.ToBase64String(
+              Encoding.ASCII.GetBytes(this.apiToken + ":"));
+          wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
+          wc.DownloadString(url, jsonParams);
+        } catch (WebException we) {
+          //
+        }
+      }
     }
 
     public List<string> query(string queryStr) {
@@ -76,7 +94,9 @@ namespace ConstructorIOClient {
       var encoding = ASCIIEncoding.ASCII;
       using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding)) {
         string responseText = reader.ReadToEnd();
-        parse the json, stick the "suggestions" into res ////////////////
+        JObject responseJson = JObject.Parse(responseText);
+        JArray suggestions = responseJson.get("suggestions");
+        res = JArray.toList();
       }
       return res;
     }
@@ -87,8 +107,7 @@ namespace ConstructorIOClient {
     }
 
     public bool addItem(string itemName, string autocompleteSection) {
-      //// assemble the some shit!
-      HttpWebResponse response = this.makePostReq(some shit); ///////////
+      //HttpWebResponse response = this.makePostReq(values);
       return this.checkResponse(response, 200);
     }
 
