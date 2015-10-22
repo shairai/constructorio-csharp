@@ -51,20 +51,22 @@ namespace ConstructorIOClient {
       return ((int) resp.StatusCode) == expectedStatus;
     }
 
-    private static HttpWebResponse makePostReq(IDictionary<string, string> values) {
+    private static HttpWebResponse makePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
         try {
           string jsonParams = jsonify that crap
           wc.Headers[HttpRequestHeader.ContentType] = "application/json";
-          // auth goes here, too
-          wc.UploadString(URI, jsonParams);
+          string creds = Convert.ToBase64String(
+              Encoding.ASCII.GetBytes(this.apiToken + ":"));
+          wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
+          wc.UploadString(url, jsonParams);
         } catch (WebException we) {
           //
         }
       }
     }
 
-    private static HttpWebResponse makeGetReq(IDictionary<string, string> values) {
+    private static HttpWebResponse makeGetReq(string url, IDictionary<string, string> values) {
       ////////////////////
     }
 
