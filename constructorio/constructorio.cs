@@ -35,7 +35,7 @@ namespace ConstructorIOClient {
       return String.Format("{0}://{1}/{2}?{3}", urlMembers);
     }
 
-    public static string createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
+    public static Dictionary<String, String> createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
       Dictionary<string, string> paramDict = new Dictionary<string, string>();
       if (isTracking) {
         paramDict.Add("term", itemName);
@@ -48,9 +48,7 @@ namespace ConstructorIOClient {
           paramDict.Add(otherParam.Key, otherParam.Value);
         }
       }
-      JObject jobj = new JObject(paramDict);
-      string serialized = jobj.toString();
-      return serialized;
+      return paramDict;
     }
 
     private static bool checkResponse(HttpWebResponse resp, int expectedStatus) {
@@ -105,12 +103,13 @@ namespace ConstructorIOClient {
 
     public bool verify() {
       HttpWebResponse response = this.makePostReq(queryDict);
-      return this.checkResponse(response, 200);
+      return checkResponse(response, 200);
     }
 
     public bool addItem(string itemName, string autocompleteSection) {
-      //HttpWebResponse response = this.makePostReq(values);
-      return this.checkResponse(response, 200);
+      Dictionary<string, string> values = this.createItemParams(itemName, autocompleteSection, false, null);
+      HttpWebResponse response = this.makePostReq(values);
+      return checkResponse(response, 200);
     }
 
     ///// get to here, copy and paste
