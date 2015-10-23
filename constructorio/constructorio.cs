@@ -67,7 +67,7 @@ namespace ConstructorIOClient {
           wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
           wc.UploadString(url, jsonParams);
         } catch (WebException we) {
-          //
+          throw ConstructorException we;//////////////////
         }
       }
     }
@@ -83,7 +83,7 @@ namespace ConstructorIOClient {
           wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
           wc.DownloadString(url, jsonParams);
         } catch (WebException we) {
-          //
+          throw ConstructorException we;///////////////////
         }
       }
     }
