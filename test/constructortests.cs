@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using ConstructorIOClient;
 
@@ -7,8 +8,10 @@ namespace ConstructorTest {
   public class ConstructorTest {
     [Test]
     public void TestSerializeParams() {
-      ConstructorIO constructor = new ConstructorIO("-", "-");
-      string serialized = constructor.SerializeParams();
+      Dictionary<string, object> paramDict = new Dictionary<string, object>();
+      paramDict.Add("boinka", "woinka");
+      paramDict.Add("moinka", "foinka");
+      string serialized = ConstructorIO.SerializeParams(paramDict);
       Assert.AreEqual(serialized, "something something", "Serializes params properly");
     }
 
