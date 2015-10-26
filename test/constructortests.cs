@@ -1,14 +1,13 @@
 using System;
 using NUnit.Framework;
-using ConstructorIO;
+using ConstructorIOClient;
 
-namespace ConstructorTests {
+namespace ConstructorTest {
   [TestFixture]
   public class ConstructorTest {
     [Test]
     public void TestSerializeParams() {
       ConstructorIO constructor = new ConstructorIO();
-      give it something to serialize
       string serialized = constructor.SerializeParams();
       Assert.AreEqual(serialized, "something something", "Serializes params properly");
     }
