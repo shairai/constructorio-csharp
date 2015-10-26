@@ -30,7 +30,7 @@ namespace ConstructorIOClient {
         this.protocol,
         this.host,
         endpoint,
-        this.serializeParams(paramDict)
+        serializeParams((Dictionary<string, object>) paramDict)
       };
       return String.Format("{0}://{1}/{2}?{3}", urlMembers);
     }
@@ -67,7 +67,7 @@ namespace ConstructorIOClient {
           wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
           wc.UploadString(url, jsonParams);
         } catch (WebException we) {
-          throw ConstructorException we;//////////////////
+          throw new Exception();
         }
       }
     }
@@ -83,7 +83,7 @@ namespace ConstructorIOClient {
           wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
           wc.DownloadString(url, jsonParams);
         } catch (WebException we) {
-          throw ConstructorException we;///////////////////
+          throw new Exception();
         }
       }
     }
@@ -107,8 +107,9 @@ namespace ConstructorIOClient {
     }
 
     public bool addItem(string itemName, string autocompleteSection) {
-      Dictionary<string, string> values = this.createItemParams(itemName, autocompleteSection, false, null);
-      HttpWebResponse response = this.makePostReq(values);
+      string url = this.makeUrl(something);
+      Dictionary<string, string> values = createItemParams(itemName, autocompleteSection, false, null);
+      HttpWebResponse response = this.makePostReq(url, values);
       return checkResponse(response, 200);
     }
 
