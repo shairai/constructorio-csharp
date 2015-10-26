@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace ConstructorIOClient {
   public class ConstructorIO {
@@ -60,7 +61,7 @@ namespace ConstructorIOClient {
       using (WebClient wc = new WebClient()) {
         try {
           JObject jobj = new JObject(values);
-          string jsonparams = jobj.toString();
+          string jsonparams = jobj.ToString();
           wc.Headers[HttpRequestHeader.ContentType] = "application/json";
           string creds = Convert.ToBase64String(
               Encoding.ASCII.GetBytes(this.apiToken + ":"));
@@ -76,7 +77,7 @@ namespace ConstructorIOClient {
       using (WebClient wc = new WebClient()) {
         try {
           JObject jobj = new JObject(values);
-          string jsonparams = jobj.toString();
+          string jsonparams = jobj.ToString();
           wc.Headers[HttpRequestHeader.ContentType] = "application/json";
           string creds = Convert.ToBase64String(
               Encoding.ASCII.GetBytes(this.apiToken + ":"));
@@ -95,8 +96,8 @@ namespace ConstructorIOClient {
       using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding)) {
         string responseText = reader.ReadToEnd();
         JObject responseJson = JObject.Parse(responseText);
-        JArray suggestions = responseJson.get("suggestions");
-        res = JArray.toList();
+        JArray suggestions = (JArray) responseJson.GetValue("suggestions");
+        res = JArray.ToList();
       }
       return res;
     }
