@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using Newtonsoft.Json.Linq;
 
 namespace ConstructorIOClient {
@@ -25,15 +26,20 @@ namespace ConstructorIOClient {
       return string.Join("&", list);
     }
 
-    public string makeUrl(string endpoint, IDictionary<string, string> paramDict) {
+    public string makeUrl(string endpoint, IDictionary<string, string> keys) {
+      Dictionary<string, object> paramDict = new Dictionary<string, object>(keys);
       paramDict.Add("autocomplete_key", this.autocompleteKey);
       string[] urlMembers = new string[] {
         this.protocol,
         this.host,
         endpoint,
-        serializeParams((Dictionary<string, object>) paramDict)
+        serializeParams(paramDict)
       };
       return String.Format("{0}://{1}/{2}?{3}", urlMembers);
+    }
+
+    public string makeUrl(string endpoint) {
+      return "void";
     }
 
     public static Dictionary<String, String> createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
@@ -57,32 +63,20 @@ namespace ConstructorIOClient {
       return ((int) resp.StatusCode) == expectedStatus;
     }
 
-    private HttpWebResponse makePostReq(string url, IDictionary<string, string> values) {
-      using (WebClient wc = new WebClient()) {
-        try {
-          JObject jobj = new JObject(values);
-          string jsonparams = jobj.ToString();
-          wc.Headers[HttpRequestHeader.ContentType] = "application/json";
-          string creds = Convert.ToBase64String(
-              Encoding.ASCII.GetBytes(this.apiToken + ":"));
-          wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
-          wc.UploadString(url, jsonParams);
-        } catch (WebException we) {
-          throw new Exception();
-        }
-      }
+    private static bool checkResponse(string resp, string expected) {
+      return resp == expected;
     }
 
-    private HttpWebResponse makeGetReq(string url, IDictionary<string, string> values) {
+    private string makePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
         try {
           JObject jobj = new JObject(values);
-          string jsonparams = jobj.ToString();
+          string jsonParams = jobj.ToString();
           wc.Headers[HttpRequestHeader.ContentType] = "application/json";
           string creds = Convert.ToBase64String(
               Encoding.ASCII.GetBytes(this.apiToken + ":"));
           wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
-          wc.DownloadString(url, jsonParams);
+          return wc.UploadString(url, jsonParams); // get the resp here
         } catch (WebException we) {
           throw new Exception();
         }
@@ -91,27 +85,32 @@ namespace ConstructorIOClient {
 
     public List<string> query(string queryStr) {
       List<string> res = new List<string>();
-      HttpWebResponse response = this.makeGetReq(queryDict);
-      var encoding = ASCIIEncoding.ASCII;
-      using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding)) {
-        string responseText = reader.ReadToEnd();
-        JObject responseJson = JObject.Parse(responseText);
-        JArray suggestions = (JArray) responseJson.GetValue("suggestions");
-        res = JArray.ToList();
+      string url = this.makeUrl("autocomplete/" + queryStr);
+      using (WebClient wc = new WebClient()) {
+        try {
+          string response = wc.DownloadString(url);
+          var encoding = ASCIIEncoding.ASCII;
+          JObject responseJson = JObject.Parse(response);
+          JArray suggestions = (JArray) responseJson.GetValue("suggestions");
+          res = suggestions.ToObject<List<string>>();
+        } catch (WebException we) {
+          throw new Exception();
+        }
       }
       return res;
     }
 
     public bool verify() {
-      HttpWebResponse response = this.makePostReq(queryDict);
-      return checkResponse(response, 200);
+      string url = this.makeUrl("v1/verify");
+      string response = this.makePostReq(url, new Dictionary<string, string>());
+      return checkResponse(response, "OK");
     }
 
     public bool addItem(string itemName, string autocompleteSection) {
-      string url = this.makeUrl(something);
+      string url = this.makeUrl("v1/item");
       Dictionary<string, string> values = createItemParams(itemName, autocompleteSection, false, null);
-      HttpWebResponse response = this.makePostReq(url, values);
-      return checkResponse(response, 200);
+      string response = this.makePostReq(url, values);
+      return checkResponse(response, "OK");
     }
 
     ///// get to here, copy and paste
