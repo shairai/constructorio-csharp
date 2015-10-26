@@ -26,7 +26,7 @@ namespace ConstructorIOClient {
       return string.Join("&", list);
     }
 
-    public string makeUrl(string endpoint, IDictionary<string, string> keys) {
+    public string makeUrl(string endpoint, IDictionary<string, object> keys) {
       Dictionary<string, object> paramDict = new Dictionary<string, object>(keys);
       paramDict.Add("autocomplete_key", this.autocompleteKey);
       string[] urlMembers = new string[] {
@@ -58,15 +58,6 @@ namespace ConstructorIOClient {
       return paramDict;
     }
 
-    private static bool checkResponse(HttpWebResponse resp, int expectedStatus) {
-      // you must also catch the WebException!
-      return ((int) resp.StatusCode) == expectedStatus;
-    }
-
-    private static bool checkResponse(string resp, string expected) {
-      return resp == expected;
-    }
-
     private string makePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
         try {
@@ -76,8 +67,8 @@ namespace ConstructorIOClient {
           string creds = Convert.ToBase64String(
               Encoding.ASCII.GetBytes(this.apiToken + ":"));
           wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
-          return wc.UploadString(url, jsonParams); // get the resp here
-        } catch (WebException we) {
+          return wc.UploadString(url, jsonParams);
+        } catch {
           throw new Exception();
         }
       }
@@ -93,7 +84,7 @@ namespace ConstructorIOClient {
           JObject responseJson = JObject.Parse(response);
           JArray suggestions = (JArray) responseJson.GetValue("suggestions");
           res = suggestions.ToObject<List<string>>();
-        } catch (WebException we) {
+        } catch {
           throw new Exception();
         }
       }
@@ -103,14 +94,14 @@ namespace ConstructorIOClient {
     public bool verify() {
       string url = this.makeUrl("v1/verify");
       string response = this.makePostReq(url, new Dictionary<string, string>());
-      return checkResponse(response, "OK");
+      return response == "OK";
     }
 
     public bool addItem(string itemName, string autocompleteSection) {
       string url = this.makeUrl("v1/item");
       Dictionary<string, string> values = createItemParams(itemName, autocompleteSection, false, null);
       string response = this.makePostReq(url, values);
-      return checkResponse(response, "OK");
+      return response == "OK";
     }
 
     ///// get to here, copy and paste
