@@ -18,7 +18,7 @@ namespace ConstructorIOClient {
       this.host = host;
     }
 
-    public static string serializeParams(IDictionary<string, object> paramDict) {
+    public static string SerializeParams(IDictionary<string, object> paramDict) {
       var list = new List<string>();
       foreach (var item in paramDict) {
         list.Add(item.Key + "=" + item.Value);
@@ -26,23 +26,23 @@ namespace ConstructorIOClient {
       return string.Join("&", list);
     }
 
-    public string makeUrl(string endpoint, IDictionary<string, object> keys) {
+    public string MakeUrl(string endpoint, IDictionary<string, object> keys) {
       Dictionary<string, object> paramDict = new Dictionary<string, object>(keys);
       paramDict.Add("autocomplete_key", this.autocompleteKey);
       string[] urlMembers = new string[] {
         this.protocol,
         this.host,
         endpoint,
-        serializeParams(paramDict)
+        SerializeParams(paramDict)
       };
       return String.Format("{0}://{1}/{2}?{3}", urlMembers);
     }
 
-    public string makeUrl(string endpoint) {
+    public string MakeUrl(string endpoint) {
       return "void";
     }
 
-    public static Dictionary<String, String> createItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
+    public static Dictionary<String, String> CreateItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
       Dictionary<string, string> paramDict = new Dictionary<string, string>();
       if (isTracking) {
         paramDict.Add("term", itemName);
@@ -58,7 +58,7 @@ namespace ConstructorIOClient {
       return paramDict;
     }
 
-    private string makePostReq(string url, IDictionary<string, string> values) {
+    private string MakePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
         try {
           JObject jobj = new JObject(values);
@@ -74,9 +74,9 @@ namespace ConstructorIOClient {
       }
     }
 
-    public List<string> query(string queryStr) {
+    public List<string> Query(string queryStr) {
       List<string> res = new List<string>();
-      string url = this.makeUrl("autocomplete/" + queryStr);
+      string url = this.MakeUrl("autocomplete/" + queryStr);
       using (WebClient wc = new WebClient()) {
         try {
           string response = wc.DownloadString(url);
@@ -91,50 +91,50 @@ namespace ConstructorIOClient {
       return res;
     }
 
-    public bool verify() {
-      string url = this.makeUrl("v1/verify");
-      string response = this.makePostReq(url, new Dictionary<string, string>());
+    public bool Verify() {
+      string url = this.MakeUrl("v1/verify");
+      string response = this.MakePostReq(url, new Dictionary<string, string>());
       return response == "OK";
     }
 
-    public bool addItem(string itemName, string autocompleteSection) {
-      string url = this.makeUrl("v1/item");
-      Dictionary<string, string> values = createItemParams(itemName, autocompleteSection, false, null);
-      string response = this.makePostReq(url, values);
+    public bool AddItem(string itemName, string autocompleteSection) {
+      string url = this.MakeUrl("v1/item");
+      Dictionary<string, string> values = CreateItemParams(itemName, autocompleteSection, false, null);
+      string response = this.MakePostReq(url, values);
       return response == "OK";
     }
 
     ///// get to here, copy and paste
 
-    public bool removeItem(string itemName, string autocompleteSection) {
+    public bool RemoveItem(string itemName, string autocompleteSection) {
       return true;
       /////////////////////
       /////////////////////
       /////////////////////
     }
 
-    public bool modifyItem(string itemName, string autocompleteSection) {
+    public bool ModifyItem(string itemName, string autocompleteSection) {
       return true;
       /////////////////////
       /////////////////////
       /////////////////////
     }
 
-    public bool trackConversion(string term, string autocompleteSection) {
+    public bool TrackConversion(string term, string autocompleteSection) {
       return true;
       /////////////////////
       /////////////////////
       /////////////////////
     }
 
-    public bool trackClickThrough(string term, string autocompleteSection) {
+    public bool TrackClickThrough(string term, string autocompleteSection) {
       return true;
       /////////////////////
       /////////////////////
       /////////////////////
     }
 
-    public bool trackSearch(string term) {
+    public bool TrackSearch(string term) {
       return true;
       /////////////////////
       /////////////////////

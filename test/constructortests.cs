@@ -7,7 +7,7 @@ namespace ConstructorTest {
   public class ConstructorTest {
     [Test]
     public void TestSerializeParams() {
-      ConstructorIO constructor = new ConstructorIO();
+      ConstructorIO constructor = new ConstructorIO("-", "-");
       string serialized = constructor.SerializeParams();
       Assert.AreEqual(serialized, "something something", "Serializes params properly");
     }
@@ -55,6 +55,10 @@ namespace ConstructorTest {
     [Test]
     public void TestTrackClickThrough() {
       ////////////
+    }
+
+    public static void Main() {
+      // null
     }
   }
 }
