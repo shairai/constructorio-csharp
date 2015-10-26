@@ -12,7 +12,7 @@ namespace ConstructorTest {
       paramDict.Add("boinka", "woinka");
       paramDict.Add("moinka", "foinka");
       string serialized = ConstructorIO.SerializeParams(paramDict);
-      Assert.AreEqual(serialized, "something something", "Serializes params properly");
+      Assert.AreEqual("boinka=woinka&moinka=foinka", serialized, "Serializes params properly");
     }
 
     [Test]
