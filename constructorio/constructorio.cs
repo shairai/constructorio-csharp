@@ -39,7 +39,8 @@ namespace ConstructorIOClient {
     }
 
     public string MakeUrl(string endpoint) {
-      return "void";
+      Dictionary<string, object> keys = new Dictionary<string, object>();
+      return this.MakeUrl(endpoint, keys);
     }
 
     public static Dictionary<String, String> CreateItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
