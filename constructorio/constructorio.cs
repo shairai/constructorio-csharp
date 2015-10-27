@@ -83,7 +83,10 @@ namespace ConstructorIOClient {
         var encoding = ASCIIEncoding.ASCII;
         JObject responseJson = JObject.Parse(response);
         JArray suggestions = (JArray) responseJson.GetValue("suggestions");
-        res = suggestions.ToObject<List<string>>();
+        List<JObject> objRes = suggestions.ToObject<List<JObject>>();
+        foreach (JObject obj in objRes) {
+          res.Add((string) obj.GetValue("value"));
+        }
       }
       return res;
     }
