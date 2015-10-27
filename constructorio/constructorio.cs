@@ -21,7 +21,7 @@ namespace ConstructorIOClient {
     public static string SerializeParams(IDictionary<string, object> paramDict) {
       var list = new List<string>();
       foreach (var item in paramDict) {
-        list.Add(item.Key + "=" + item.Value);
+        list.Add(System.Uri.EscapeDataString(item.Key) + "=" + System.Uri.EscapeDataString((string)item.Value));
       }
       return string.Join("&", list);
     }
@@ -39,6 +39,7 @@ namespace ConstructorIOClient {
     }
 
     public string MakeUrl(string endpoint) {
+      // empty keys
       Dictionary<string, object> keys = new Dictionary<string, object>();
       return this.MakeUrl(endpoint, keys);
     }

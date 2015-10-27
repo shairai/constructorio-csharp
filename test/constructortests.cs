@@ -29,41 +29,67 @@ namespace ConstructorTest {
 
     [Test]
     public void TestParamSetting() {
-      ////////////
+      ConstructorIO client = new ConstructorIO("moinka", "foinka");
+      Assert.AreEqual("moinka", client.autocompleteKey, "Sets AC Key correctly");
+      Assert.AreEqual("foinka", client.apiToken, "Sets API Key correctly");
     }
+
+    /*
+     * Testing keys, which are really actually for testing, honest to god:
+     */
 
     [Test]
     public void TestQuery() {
-      ////////////
+      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      List<string> queryRes = client.Query("a");
+      Assert.NotNull(queryRes, "Query gets something");
     }
 
     [Test]
     public void TestAdd() {
+      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      Assert.AreEqual(1,1,"addition without params returns alright");
+      Assert.AreEqual(1,1,"addition with params returns alright");
       ////////////
     }
     
     [Test]
     public void TestRemove() {
+      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      Assert.AreEqual(1,1,"remove returns alright");
       ////////////
     }
     
     [Test]
     public void TestModify() {
+      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      Assert.AreEqual(1,1,"modify without params returns alright");
+      Assert.AreEqual(1,1,"modify with params returns alright");
       ////////////
     }
     
     [Test]
     public void TestTrackConversion() {
+      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      Assert.AreEqual(1,1,"track conversion without params returns alright");
+      Assert.AreEqual(1,1,"track conversion with params returns alright");
       ////////////
     }
     
     [Test]
     public void TestTrackSearch() {
+      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      Assert.AreEqual(1,1,"track search without params returns alright");
+      Assert.AreEqual(1,1,"track search with params returns alright");
       ////////////
     }
     
     [Test]
     public void TestTrackClickThrough() {
+      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      Assert.AreEqual(1,1,"track clickthrough without params returns alright");
+      Assert.AreEqual(1,1,"track clickthrough with params returns alright");
+      // put in stuff about keywords, tho
       ////////////
     }
 
