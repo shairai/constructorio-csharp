@@ -116,14 +116,14 @@ namespace ConstructorIOClient {
         string creds = Convert.ToBase64String(
             Encoding.ASCII.GetBytes(this.apiToken + ":"));
         JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
-        string data = values.ToString();
+        byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
         HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
         req.Method = "DELETE";
         req.ContentType = "application/json";
         req.Headers.Add("Authorization", creds);
-        req.ContentLength = data.Length;
+        req.ContentLength = buf.Length;
         using (Stream reqStream = req.GetRequestStream()) {
-          reqStream.Write(data, 0, data.Length);
+          reqStream.Write(buf, 0, buf.Length);
         }
         using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
           return (int)resp.StatusCode == 204;
@@ -131,7 +131,6 @@ namespace ConstructorIOClient {
       } catch {
         throw new Exception();
       }
-      return false;
     }
 
     public bool ModifyItem(string itemName, string autocompleteSection) {
@@ -140,14 +139,14 @@ namespace ConstructorIOClient {
         string creds = Convert.ToBase64String(
             Encoding.ASCII.GetBytes(this.apiToken + ":"));
         JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
-        string data = values.ToString();
+        byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
         HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
         req.Method = "PUT";
         req.ContentType = "application/json";
         req.Headers.Add("Authorization", creds);
-        req.ContentLength = data.Length;
+        req.ContentLength = buf.Length;
         using (Stream reqStream = req.GetRequestStream()) {
-          reqStream.Write(data, 0, data.Length);
+          reqStream.Write(buf, 0, buf.Length);
         }
         using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
           return (int)resp.StatusCode == 204;
@@ -155,7 +154,6 @@ namespace ConstructorIOClient {
       } catch {
         throw new Exception();
       }
-      return false;
     }
 
 
