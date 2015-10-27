@@ -65,18 +65,18 @@ namespace ConstructorIOClient {
 
     private string MakePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
+        try {
         JObject jobj = JObject.FromObject(values);
         string jsonParams = jobj.ToString();
         wc.Headers[HttpRequestHeader.ContentType] = "application/json";
         string creds = Convert.ToBase64String(
             Encoding.ASCII.GetBytes(this.apiToken + ":"));
         wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
-        try {
-          return wc.UploadString(url, jsonParams);
-        } catch (WebException ex) {
-          using (var stream = ex.Response.GetResponseStream()) {
-            using (var reader = new StreamReader(stream)) {
-              throw new Exception(reader.ReadToEnd());
+        return wc.UploadString(url, jsonParams);
+        } catch (WebException we) {
+          using (Stream stream = we.Response.GetResponseStream()) {
+            using (StreamReader reader = new StreamReader(stream)) {
+              throw new WebException(reader.ReadToEnd());
             }
           }
         }
@@ -102,14 +102,14 @@ namespace ConstructorIOClient {
     public bool Verify() {
       string url = this.MakeUrl("v1/verify");
       string response = this.MakePostReq(url, new Dictionary<string, string>());
-      return response == "OK";
+      return response == "";
     }
 
     public bool AddItem(string itemName, string autocompleteSection) {
       string url = this.MakeUrl("v1/item");
       Dictionary<string, string> values = CreateItemParams(itemName, autocompleteSection, false, null);
       string response = this.MakePostReq(url, values);
-      return response == "OK";
+      return response == "";
     }
 
     // add the with params method
@@ -157,21 +157,21 @@ namespace ConstructorIOClient {
       string url = this.MakeUrl("v1/conversion");
       Dictionary<string, string> values = CreateItemParams(term, autocompleteSection, true, null);
       string response = this.MakePostReq(url, values);
-      return response == "OK"; // actually, want a 204
+      return response == "";
     }
 
     public bool TrackClickThrough(string term, string autocompleteSection) {
       string url = this.MakeUrl("v1/click_through");
       Dictionary<string, string> values = CreateItemParams(term, autocompleteSection, true, null);
       string response = this.MakePostReq(url, values);
-      return response == "OK"; // actually, want a 204
+      return response == "";
     }
 
     public bool TrackSearch(string term) {
       string url = this.MakeUrl("v1/search");
       Dictionary<string, string> values = CreateItemParams(term, null, true, null);
       string response = this.MakePostReq(url, values);
-      return response == "OK"; // actually, want a 204
+      return response == "";
     }
 
     public static void Main() {
