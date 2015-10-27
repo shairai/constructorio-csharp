@@ -112,6 +112,13 @@ namespace ConstructorIOClient {
       return response == "";
     }
 
+    public bool AddItem(string itemName, string autocompleteSection, IDictionary<string, string> paramDict) {
+      string url = this.MakeUrl("v1/item");
+      Dictionary<string, string> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
+      string response = this.MakePostReq(url, values);
+      return response == "";
+    }
+
     // add the with params method
 
     public bool RemoveItem(string itemName, string autocompleteSection) {

@@ -45,19 +45,22 @@ namespace ConstructorTest {
       Assert.NotNull(queryRes, "Query gets something");
     }
 
-    [Test]
-    public void TestAdd() {
-      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    public static string GenerateRandString() {
       Random random = new Random();
       string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       char[] stringChars = new char[10];
-      for (int i = 0; i < stringChars.Length; i++) {
-        stringChars[i] = chars[random.Next(chars.Length)];
+      for (int i = 0; i < stringChars.Length; i++) { stringChars[i] = chars[random.Next(chars.Length)];
       }
-      string itemName = new String(stringChars);
+      return new String(stringChars);
+    }
+
+    [Test]
+    public void TestAdd() {
+      ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      string itemName = GenerateRandString();
       Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "addition without params returns alright");
-      Assert.AreEqual(1,1,"addition with params returns alright");
-      ////////////
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions", paramDict1), "addition with params returns alright");
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions", paramDict2), "addition with all params returns alright");
     }
     
     [Test]
@@ -72,6 +75,7 @@ namespace ConstructorTest {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       Assert.AreEqual(1,1,"modify without params returns alright");
       Assert.AreEqual(1,1,"modify with params returns alright");
+      Assert.AreEqual(1,1,"modify with all params returns alright");
       ////////////
     }
     
@@ -80,6 +84,7 @@ namespace ConstructorTest {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       Assert.AreEqual(1,1,"track conversion without params returns alright");
       Assert.AreEqual(1,1,"track conversion with params returns alright");
+      Assert.AreEqual(1,1,"track conv with all params returns alright");
       ////////////
     }
     
@@ -88,6 +93,7 @@ namespace ConstructorTest {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       Assert.AreEqual(1,1,"track search without params returns alright");
       Assert.AreEqual(1,1,"track search with params returns alright");
+      Assert.AreEqual(1,1,"track search with all params returns alright");
       ////////////
     }
     
@@ -96,6 +102,7 @@ namespace ConstructorTest {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       Assert.AreEqual(1,1,"track clickthrough without params returns alright");
       Assert.AreEqual(1,1,"track clickthrough with params returns alright");
+      Assert.AreEqual(1,1,"track clickthrough with all params returns alright");
       // put in stuff about keywords, tho
       ////////////
     }
