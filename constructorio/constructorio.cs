@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -51,7 +52,9 @@ namespace ConstructorIOClient {
       } else {
         paramDict.Add("item_name", itemName);
       }
-      paramDict.Add("autocomplete_section", autocompleteSection);
+      if (autocompleteSection != null) {
+        paramDict.Add("autocomplete_section", autocompleteSection);
+      }
       if (otherParams != null) {
         foreach (var otherParam in otherParams) {
           paramDict.Add(otherParam.Key, otherParam.Value);
@@ -123,7 +126,7 @@ namespace ConstructorIOClient {
           reqStream.Write(data, 0, data.Length);
         }
         using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
-          return resp.StatusCode == 204;
+          return (int)resp.StatusCode == 204;
         }
       } catch {
         throw new Exception();
@@ -147,7 +150,7 @@ namespace ConstructorIOClient {
           reqStream.Write(data, 0, data.Length);
         }
         using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
-          return resp.StatusCode == 204;
+          return (int)resp.StatusCode == 204;
         }
       } catch {
         throw new Exception();
@@ -172,7 +175,7 @@ namespace ConstructorIOClient {
 
     public bool TrackSearch(string term) {
       string url = this.MakeUrl("v1/search");
-      Dictionary<string, string> values = CreateItemParams(term, autocompleteSection, true, null);
+      Dictionary<string, string> values = CreateItemParams(term, null, true, null);
       string response = this.MakePostReq(url, values);
       return response == "OK"; // actually, want a 204
     }
