@@ -65,13 +65,13 @@ namespace ConstructorIOClient {
 
     private string MakePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
-          JObject jobj = new JObject(values);
-          string jsonParams = jobj.ToString();
-          wc.Headers[HttpRequestHeader.ContentType] = "application/json";
-          string creds = Convert.ToBase64String(
-              Encoding.ASCII.GetBytes(this.apiToken + ":"));
-          wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
-          return wc.UploadString(url, jsonParams);
+        JObject jobj = JObject.FromObject(values);
+        string jsonParams = jobj.ToString();
+        wc.Headers[HttpRequestHeader.ContentType] = "application/json";
+        string creds = Convert.ToBase64String(
+            Encoding.ASCII.GetBytes(this.apiToken + ":"));
+        wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
+        return wc.UploadString(url, jsonParams);
       }
     }
 
