@@ -48,7 +48,14 @@ namespace ConstructorTest {
     [Test]
     public void TestAdd() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-      Assert.IsTrue(client.AddItem("woinka", "Search Suggestions"), "addition without params returns alright");
+      Random random = new Random();
+      string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      char[] stringChars = new char[10];
+      for (int i = 0; i < stringChars.Length; i++) {
+        stringChars[i] = chars[random.Next(chars.Length)];
+      }
+      string itemName = new String(stringChars);
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "addition without params returns alright");
       Assert.AreEqual(1,1,"addition with params returns alright");
       ////////////
     }
