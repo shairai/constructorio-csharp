@@ -98,7 +98,6 @@ namespace ConstructorIOClient {
       string response = this.MakePostReq(url, new Dictionary<string, string>());
       return response == "OK";
     }
-
     public bool AddItem(string itemName, string autocompleteSection) {
       string url = this.MakeUrl("v1/item");
       Dictionary<string, string> values = CreateItemParams(itemName, autocompleteSection, false, null);
@@ -106,41 +105,76 @@ namespace ConstructorIOClient {
       return response == "OK";
     }
 
-    ///// get to here, copy and paste
+    // add the with params method
 
     public bool RemoveItem(string itemName, string autocompleteSection) {
-      return true;
-      /////////////////////
-      /////////////////////
-      /////////////////////
+      try {
+        string url = this.MakeUrl("v1/item");
+        string creds = Convert.ToBase64String(
+            Encoding.ASCII.GetBytes(this.apiToken + ":"));
+        JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
+        string data = values.ToString();
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+        req.Method = "DELETE";
+        req.ContentType = "application/json";
+        req.Headers.Add("Authorization", creds);
+        req.ContentLength = data.Length;
+        using (Stream reqStream = req.GetRequestStream()) {
+          reqStream.Write(data, 0, data.Length);
+        }
+        using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
+          return resp.StatusCode == 204;
+        }
+      } catch {
+        throw new Exception();
+      }
+      return false;
     }
 
     public bool ModifyItem(string itemName, string autocompleteSection) {
-      return true;
-      /////////////////////
-      /////////////////////
-      /////////////////////
+      try {
+        string url = this.MakeUrl("v1/item");
+        string creds = Convert.ToBase64String(
+            Encoding.ASCII.GetBytes(this.apiToken + ":"));
+        JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
+        string data = values.ToString();
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+        req.Method = "PUT";
+        req.ContentType = "application/json";
+        req.Headers.Add("Authorization", creds);
+        req.ContentLength = data.Length;
+        using (Stream reqStream = req.GetRequestStream()) {
+          reqStream.Write(data, 0, data.Length);
+        }
+        using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
+          return resp.StatusCode == 204;
+        }
+      } catch {
+        throw new Exception();
+      }
+      return false;
     }
 
+
     public bool TrackConversion(string term, string autocompleteSection) {
-      return true;
-      /////////////////////
-      /////////////////////
-      /////////////////////
+      string url = this.MakeUrl("v1/conversion");
+      Dictionary<string, string> values = CreateItemParams(term, autocompleteSection, true, null);
+      string response = this.MakePostReq(url, values);
+      return response == "OK"; // actually, want a 204
     }
 
     public bool TrackClickThrough(string term, string autocompleteSection) {
-      return true;
-      /////////////////////
-      /////////////////////
-      /////////////////////
+      string url = this.MakeUrl("v1/click_through");
+      Dictionary<string, string> values = CreateItemParams(term, autocompleteSection, true, null);
+      string response = this.MakePostReq(url, values);
+      return response == "OK"; // actually, want a 204
     }
 
     public bool TrackSearch(string term) {
-      return true;
-      /////////////////////
-      /////////////////////
-      /////////////////////
+      string url = this.MakeUrl("v1/search");
+      Dictionary<string, string> values = CreateItemParams(term, autocompleteSection, true, null);
+      string response = this.MakePostReq(url, values);
+      return response == "OK"; // actually, want a 204
     }
 
     public static void Main() {
