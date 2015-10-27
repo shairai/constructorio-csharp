@@ -24,14 +24,14 @@ namespace ConstructorTest {
       paramDict.Add("boinka", "woinka");
       paramDict.Add("moinka", "foinka");
       string paramUrl = client.MakeUrl("v1/woinka", paramDict);
-      Assert.AreEqual("https://ac.cnstrc.com/v1/woinka?autocomplete_key=moinka", paramUrl, "Creates URL correctly with parameters");
+      Assert.AreEqual("https://ac.cnstrc.com/v1/woinka?boinka=woinka&moinka=foinka&autocomplete_key=foinka", paramUrl, "Creates URL correctly with parameters");
     }
 
     [Test]
     public void TestParamSetting() {
       ConstructorIO client = new ConstructorIO("moinka", "foinka");
-      Assert.AreEqual("moinka", client.autocompleteKey, "Sets AC Key correctly");
-      Assert.AreEqual("foinka", client.apiToken, "Sets API Key correctly");
+      Assert.AreEqual("moinka", client.apiToken, "Sets API Key correctly");
+      Assert.AreEqual("foinka", client.autocompleteKey, "Sets AC Key correctly");
     }
 
     /*
