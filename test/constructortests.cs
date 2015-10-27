@@ -48,7 +48,7 @@ namespace ConstructorTest {
     [Test]
     public void TestAdd() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-      Assert.IsTrue(client.AddItem("woinka", "Search Suggestions"),"addition without params returns alright");
+      Assert.IsTrue(client.AddItem("woinka", "Search Suggestions"), "addition without params returns alright");
       Assert.AreEqual(1,1,"addition with params returns alright");
       ////////////
     }

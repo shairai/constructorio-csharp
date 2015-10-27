@@ -71,7 +71,15 @@ namespace ConstructorIOClient {
         string creds = Convert.ToBase64String(
             Encoding.ASCII.GetBytes(this.apiToken + ":"));
         wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
-        return wc.UploadString(url, jsonParams);
+        try {
+          return wc.UploadString(url, jsonParams);
+        } catch (WebException ex) {
+          using (var stream = ex.Response.GetResponseStream()) {
+            using (var reader = new StreamReader(stream)) {
+              throw new Exception(reader.ReadToEnd());
+            }
+          }
+        }
       }
     }
 
@@ -96,6 +104,7 @@ namespace ConstructorIOClient {
       string response = this.MakePostReq(url, new Dictionary<string, string>());
       return response == "OK";
     }
+
     public bool AddItem(string itemName, string autocompleteSection) {
       string url = this.MakeUrl("v1/item");
       Dictionary<string, string> values = CreateItemParams(itemName, autocompleteSection, false, null);
