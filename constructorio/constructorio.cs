@@ -65,7 +65,6 @@ namespace ConstructorIOClient {
 
     private string MakePostReq(string url, IDictionary<string, string> values) {
       using (WebClient wc = new WebClient()) {
-        try {
           JObject jobj = new JObject(values);
           string jsonParams = jobj.ToString();
           wc.Headers[HttpRequestHeader.ContentType] = "application/json";
@@ -73,9 +72,6 @@ namespace ConstructorIOClient {
               Encoding.ASCII.GetBytes(this.apiToken + ":"));
           wc.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
           return wc.UploadString(url, jsonParams);
-        } catch {
-          throw new Exception();
-        }
       }
     }
 
@@ -83,15 +79,11 @@ namespace ConstructorIOClient {
       List<string> res = new List<string>();
       string url = this.MakeUrl("autocomplete/" + queryStr);
       using (WebClient wc = new WebClient()) {
-        try {
-          string response = wc.DownloadString(url);
-          var encoding = ASCIIEncoding.ASCII;
-          JObject responseJson = JObject.Parse(response);
-          JArray suggestions = (JArray) responseJson.GetValue("suggestions");
-          res = suggestions.ToObject<List<string>>();
-        } catch {
-          throw new Exception();
-        }
+        string response = wc.DownloadString(url);
+        var encoding = ASCIIEncoding.ASCII;
+        JObject responseJson = JObject.Parse(response);
+        JArray suggestions = (JArray) responseJson.GetValue("suggestions");
+        res = suggestions.ToObject<List<string>>();
       }
       return res;
     }
@@ -111,48 +103,40 @@ namespace ConstructorIOClient {
     // add the with params method
 
     public bool RemoveItem(string itemName, string autocompleteSection) {
-      try {
-        string url = this.MakeUrl("v1/item");
-        string creds = Convert.ToBase64String(
-            Encoding.ASCII.GetBytes(this.apiToken + ":"));
-        JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
-        byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
-        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-        req.Method = "DELETE";
-        req.ContentType = "application/json";
-        req.Headers.Add("Authorization", creds);
-        req.ContentLength = buf.Length;
-        using (Stream reqStream = req.GetRequestStream()) {
-          reqStream.Write(buf, 0, buf.Length);
-        }
-        using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
-          return (int)resp.StatusCode == 204;
-        }
-      } catch {
-        throw new Exception();
+      string url = this.MakeUrl("v1/item");
+      string creds = Convert.ToBase64String(
+          Encoding.ASCII.GetBytes(this.apiToken + ":"));
+      JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
+      byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
+      HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+      req.Method = "DELETE";
+      req.ContentType = "application/json";
+      req.Headers.Add("Authorization", creds);
+      req.ContentLength = buf.Length;
+      using (Stream reqStream = req.GetRequestStream()) {
+        reqStream.Write(buf, 0, buf.Length);
+      }
+      using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
+        return (int)resp.StatusCode == 204;
       }
     }
 
     public bool ModifyItem(string itemName, string autocompleteSection) {
-      try {
-        string url = this.MakeUrl("v1/item");
-        string creds = Convert.ToBase64String(
-            Encoding.ASCII.GetBytes(this.apiToken + ":"));
-        JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
-        byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
-        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-        req.Method = "PUT";
-        req.ContentType = "application/json";
-        req.Headers.Add("Authorization", creds);
-        req.ContentLength = buf.Length;
-        using (Stream reqStream = req.GetRequestStream()) {
-          reqStream.Write(buf, 0, buf.Length);
-        }
-        using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
-          return (int)resp.StatusCode == 204;
-        }
-      } catch {
-        throw new Exception();
+      string url = this.MakeUrl("v1/item");
+      string creds = Convert.ToBase64String(
+          Encoding.ASCII.GetBytes(this.apiToken + ":"));
+      JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
+      byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
+      HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+      req.Method = "PUT";
+      req.ContentType = "application/json";
+      req.Headers.Add("Authorization", creds);
+      req.ContentLength = buf.Length;
+      using (Stream reqStream = req.GetRequestStream()) {
+        reqStream.Write(buf, 0, buf.Length);
+      }
+      using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
+        return (int)resp.StatusCode == 204;
       }
     }
 
