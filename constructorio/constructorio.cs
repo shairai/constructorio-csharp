@@ -119,8 +119,6 @@ namespace ConstructorIOClient {
       return response == "";
     }
 
-    // add the with params method
-
     public bool RemoveItem(string itemName, string autocompleteSection) {
       string url = this.MakeUrl("v1/item");
       string creds = Convert.ToBase64String(
@@ -159,6 +157,9 @@ namespace ConstructorIOClient {
       }
     }
 
+    public bool ModifyItem(string itemName, string autocompleteSection, IDictionary<string, string> paramDict) {
+      return false;
+    }
 
     public bool TrackConversion(string term, string autocompleteSection) {
       string url = this.MakeUrl("v1/conversion");

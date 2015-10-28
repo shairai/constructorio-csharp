@@ -36,6 +36,7 @@ namespace ConstructorTest {
 
     /*
      * Testing keys, which are really actually for testing, honest to god:
+     * "YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q"
      */
 
     [Test]
@@ -58,23 +59,36 @@ namespace ConstructorTest {
     public void TestAdd() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       string itemName = GenerateRandString();
-      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "addition without params returns alright");
-      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions", paramDict1), "addition with params returns alright");
-      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions", paramDict2), "addition with all params returns alright");
+      Dictionary<string, string> paramDict1 = new Dictionary<string, object>();
+      paramDict1.Add("suggested_score", 1337);
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "Addition without params returns alright");
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions", paramDict1), "Addition with params returns alright");
     }
     
     [Test]
     public void TestRemove() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-      Assert.AreEqual(1,1,"remove returns alright");
-      ////////////
+      string itemName = GenerateRandString();
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "Creation of item for removal returns alright");
+      Assert.IsTrue(client.RemoveItem(itemName, "Search Suggestions"), "Removes item alright");
     }
     
     [Test]
     public void TestModify() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+      string itemName1 = GenerateRandString();
+      string itemName2 = GenerateRandString();
+      string itemName3 = GenerateRandString();
+      string newItemName1 = GenerateRandString();
+      string newItemName2 = GenerateRandString();
+      string newItemName3 = GenerateRandString();
+      Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Creation of first item for modification returns alright");
+      Assert.IsTrue(client.AddItem(itemName2, "Search Suggestions"), "Creation of second item for modification returns alright");
+      Assert.IsTrue(client.AddItem(itemName3, "Search Suggestions"), "Creation of third item for modification returns alright");
+      Assert.IsTrue(client.ModifyItem(some shit, some shit));
+      make the paramdicts
       Assert.AreEqual(1,1,"modify without params returns alright");
-      Assert.AreEqual(1,1,"modify with params returns alright");
+      Assert.AreEqual(1,1,"modify with one param returns alright");
       Assert.AreEqual(1,1,"modify with all params returns alright");
       ////////////
     }
@@ -82,8 +96,10 @@ namespace ConstructorTest {
     [Test]
     public void TestTrackConversion() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-      Assert.AreEqual(1,1,"track conversion without params returns alright");
-      Assert.AreEqual(1,1,"track conversion with params returns alright");
+      string itemName = GenerateRandString();
+      Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Creation of first item for tracking returns alright");
+      Assert.IsTrue(client.TrackConversion(itemName1, "Search Suggestions"), "Track conversion without parameters returns alright");
+      Assert.AreEqual(1,1,"track conversion with one param returns alright");
       Assert.AreEqual(1,1,"track conv with all params returns alright");
       ////////////
     }
@@ -91,8 +107,10 @@ namespace ConstructorTest {
     [Test]
     public void TestTrackSearch() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-      Assert.AreEqual(1,1,"track search without params returns alright");
-      Assert.AreEqual(1,1,"track search with params returns alright");
+      string itemName = GenerateRandString();
+      Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Creation of first item for tracking returns alright");
+      Assert.IsTrue(client.TrackSearch(itemName1), "Track searching without parameters returns alright");
+      Assert.AreEqual(1,1,"track search with one param returns alright");
       Assert.AreEqual(1,1,"track search with all params returns alright");
       ////////////
     }
@@ -100,8 +118,10 @@ namespace ConstructorTest {
     [Test]
     public void TestTrackClickThrough() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-      Assert.AreEqual(1,1,"track clickthrough without params returns alright");
-      Assert.AreEqual(1,1,"track clickthrough with params returns alright");
+      string itemName = GenerateRandString();
+      Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Creation of first item for tracking returns alright");
+      Assert.IsTrue(client.TrackClickThrough(itemName1, "Search Suggestions"), "Track clickthrough without parameters returns alright");
+      Assert.AreEqual(1,1,"track clickthrough with one param returns alright");
       Assert.AreEqual(1,1,"track clickthrough with all params returns alright");
       // put in stuff about keywords, tho
       ////////////
