@@ -45,8 +45,8 @@ namespace ConstructorIOClient {
       return this.MakeUrl(endpoint, keys);
     }
 
-    public static Dictionary<String, String> CreateItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, string> otherParams) {
-      Dictionary<string, string> paramDict = new Dictionary<string, string>();
+    public static Dictionary<string, object> CreateItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, object> otherParams) {
+      Dictionary<string, object> paramDict = new Dictionary<string, object>();
       if (isTracking) {
         paramDict.Add("term", itemName);
       } else {
@@ -63,7 +63,7 @@ namespace ConstructorIOClient {
       return paramDict;
     }
 
-    private string MakePostReq(string url, IDictionary<string, string> values) {
+    private string MakePostReq(string url, IDictionary<string, object> values) {
       using (WebClient wc = new WebClient()) {
         try {
         JObject jobj = JObject.FromObject(values);
@@ -101,20 +101,17 @@ namespace ConstructorIOClient {
 
     public bool Verify() {
       string url = this.MakeUrl("v1/verify");
-      string response = this.MakePostReq(url, new Dictionary<string, string>());
+      string response = this.MakePostReq(url, new Dictionary<string, object>());
       return response == "";
     }
 
     public bool AddItem(string itemName, string autocompleteSection) {
-      string url = this.MakeUrl("v1/item");
-      Dictionary<string, string> values = CreateItemParams(itemName, autocompleteSection, false, null);
-      string response = this.MakePostReq(url, values);
-      return response == "";
+      return this.AddItem(itemName, autocompleteSection, new Dictionary<string, object>());
     }
 
-    public bool AddItem(string itemName, string autocompleteSection, IDictionary<string, string> paramDict) {
+    public bool AddItem(string itemName, string autocompleteSection, IDictionary<string, object> paramDict) {
       string url = this.MakeUrl("v1/item");
-      Dictionary<string, string> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
+      Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
       string response = this.MakePostReq(url, values);
       return response == "";
     }
@@ -138,11 +135,15 @@ namespace ConstructorIOClient {
       }
     }
 
-    public bool ModifyItem(string itemName, string autocompleteSection) {
+    public bool ModifyItem(string itemName, string newItemName, string autocompleteSection) {
+      return this.ModifyItem(itemName, newItemName, autocompleteSection, new Dictionary<string, object>());
+    }
+
+    public bool ModifyItem(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict) {
       string url = this.MakeUrl("v1/item");
       string creds = Convert.ToBase64String(
           Encoding.ASCII.GetBytes(this.apiToken + ":"));
-      JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
+      JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, paramDict));
       byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
       HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
       req.Method = "PUT";
@@ -157,33 +158,41 @@ namespace ConstructorIOClient {
       }
     }
 
-    public bool ModifyItem(string itemName, string autocompleteSection, IDictionary<string, string> paramDict) {
-      return false;
-    }
-
     public bool TrackConversion(string term, string autocompleteSection) {
+      return this.TrackConversion(term, autocompleteSection, new Dictionary<string, object>());
+    }
+    
+    public bool TrackConversion(string term, string autocompleteSection, IDictionary<string, object> paramDict) {
       string url = this.MakeUrl("v1/conversion");
-      Dictionary<string, string> values = CreateItemParams(term, autocompleteSection, true, null);
+      Dictionary<string, object> values = CreateItemParams(term, autocompleteSection, true, paramDict);
       string response = this.MakePostReq(url, values);
       return response == "";
     }
 
     public bool TrackClickThrough(string term, string autocompleteSection) {
+      return this.TrackClickThrough(term, autocompleteSection, new Dictionary<string, object>());
+    }
+    
+    public bool TrackClickThrough(string term, string autocompleteSection, IDictionary<string, object> paramDict) {
       string url = this.MakeUrl("v1/click_through");
-      Dictionary<string, string> values = CreateItemParams(term, autocompleteSection, true, null);
+      Dictionary<string, object> values = CreateItemParams(term, autocompleteSection, true, paramDict);
       string response = this.MakePostReq(url, values);
       return response == "";
     }
 
     public bool TrackSearch(string term) {
+      return this.TrackSearch(term, new Dictionary<string, object>());
+    }
+
+    public bool TrackSearch(string term, IDictionary<string, object> paramDict) {
       string url = this.MakeUrl("v1/search");
-      Dictionary<string, string> values = CreateItemParams(term, null, true, null);
+      Dictionary<string, object> values = CreateItemParams(term, null, true, paramDict);
       string response = this.MakePostReq(url, values);
       return response == "";
     }
 
     public static void Main() {
-      Console.WriteLine("boinka doinka");
+      // null
     }
 
   }
