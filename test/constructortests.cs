@@ -85,46 +85,58 @@ namespace ConstructorTest {
       Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Creation of first item for modification returns alright");
       Assert.IsTrue(client.AddItem(itemName2, "Search Suggestions"), "Creation of second item for modification returns alright");
       Assert.IsTrue(client.AddItem(itemName3, "Search Suggestions"), "Creation of third item for modification returns alright");
-      Assert.IsTrue(client.ModifyItem(some shit, some shit));
-      make the paramdicts
-      Assert.AreEqual(1,1,"modify without params returns alright");
-      Assert.AreEqual(1,1,"modify with one param returns alright");
-      Assert.AreEqual(1,1,"modify with all params returns alright");
-      ////////////
+      Dictionary<string, object> paramDict2 = new Dictionary<string, object>();
+      Dictionary<string, object> paramDict3 = new Dictionary<string, object>();
+      paramDict2.Add("suggested_score", 1337);
+      paramDict3.Add("suggested_score", 1337);
+      // paramDict3 has ALL params, add them in sometime
+      Assert.IsTrue(client.ModifyItem(itemName1, newItemName1, "Search Suggestions"), "Modification without params returns alright");
+      Assert.IsTrue(client.ModifyItem(itemName2, newItemName2, "Search Suggestions", paramDict2), "Modification with one param returns alright");
+      Assert.IsTrue(client.ModifyItem(itemName3, newItemName3, "Search Suggestions", paramDict3), "Modification with all params returns alright");
     }
     
     [Test]
     public void TestTrackConversion() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       string itemName = GenerateRandString();
-      Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Creation of first item for tracking returns alright");
-      Assert.IsTrue(client.TrackConversion(itemName1, "Search Suggestions"), "Track conversion without parameters returns alright");
-      Assert.AreEqual(1,1,"track conversion with one param returns alright");
-      Assert.AreEqual(1,1,"track conv with all params returns alright");
-      ////////////
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "Creation of first item for tracking returns alright");
+      Assert.IsTrue(client.TrackConversion(itemName, "Search Suggestions"), "Track conversion without parameters returns alright");
+      Dictionary<string, object> paramDict2 = new Dictionary<string, object>();
+      Dictionary<string, object> paramDict3 = new Dictionary<string, object>();
+      paramDict2.Add("item", itemName);
+      paramDict3.Add("item", itemName);
+      //////////////////
+      Assert.IsTrue(client.TrackConversion(itemName, "Search Suggestions", paramDict2), "Track conversion with one parameter returns alright");
+      Assert.IsTrue(client.TrackConversion(itemName, "Search Suggestions", paramDict3), "Track conversion with all parameters returns alright");
     }
     
     [Test]
     public void TestTrackSearch() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       string itemName = GenerateRandString();
-      Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Creation of first item for tracking returns alright");
-      Assert.IsTrue(client.TrackSearch(itemName1), "Track searching without parameters returns alright");
-      Assert.AreEqual(1,1,"track search with one param returns alright");
-      Assert.AreEqual(1,1,"track search with all params returns alright");
-      ////////////
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "Creation of first item for tracking returns alright");
+      Assert.IsTrue(client.TrackSearch(itemName), "Track searching without parameters returns alright");
+      Dictionary<string, object> paramDict2 = new Dictionary<string, object>();
+      Dictionary<string, object> paramDict3 = new Dictionary<string, object>();
+      paramDict2.Add("item", itemName);
+      paramDict3.Add("item", itemName);
+      Assert.IsTrue(client.TrackSearch(itemName, paramDict2), "Track search with one parameter returns alright");
+      Assert.IsTrue(client.TrackSearch(itemName, paramDict3), "Track search with all parameters returns alright");
     }
     
     [Test]
     public void TestTrackClickThrough() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       string itemName = GenerateRandString();
-      Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Creation of first item for tracking returns alright");
-      Assert.IsTrue(client.TrackClickThrough(itemName1, "Search Suggestions"), "Track clickthrough without parameters returns alright");
-      Assert.AreEqual(1,1,"track clickthrough with one param returns alright");
-      Assert.AreEqual(1,1,"track clickthrough with all params returns alright");
-      // put in stuff about keywords, tho
-      ////////////
+      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "Creation of first item for tracking returns alright");
+      Assert.IsTrue(client.TrackClickThrough(itemName, "Search Suggestions"), "Track clickthrough without parameters returns alright");
+      Dictionary<string, object> paramDict2 = new Dictionary<string, object>();
+      Dictionary<string, object> paramDict3 = new Dictionary<string, object>();
+      paramDict2.Add("item", itemName);
+      paramDict3.Add("item", itemName);
+      /////////////
+      Assert.IsTrue(client.TrackClickThrough(itemName, "Search Suggestions", paramDict2), "Track clickthrough with one parameter returns alright");
+      Assert.IsTrue(client.TrackClickThrough(itemName, "Search Suggestions", paramDict3), "Track clickthrough with all parameters returns alright");
     }
 
     public static void Main() {
