@@ -83,6 +83,32 @@ namespace ConstructorIOClient {
       }
     }
 
+    private bool MakeOtherReq(string url, string verb, IDictionary<string, object> valueDict) {
+      try {
+        string creds = "Basic " + Convert.ToBase64String(
+            Encoding.ASCII.GetBytes(this.apiToken + ":"));
+        JObject values = JObject.FromObject(valueDict);
+        byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+        req.Method = verb;
+        req.ContentType = "application/json";
+        req.Headers.Add("Authorization", creds);
+        req.ContentLength = buf.Length;
+        using (Stream reqStream = req.GetRequestStream()) {
+          reqStream.Write(buf, 0, buf.Length);
+        }
+        using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
+          return (int)resp.StatusCode == 204;
+        }
+      } catch (WebException we) {
+        using (Stream stream = we.Response.GetResponseStream()) {
+          using (StreamReader reader = new StreamReader(stream)) {
+            throw new WebException(reader.ReadToEnd());
+          }
+        }
+      }
+    }
+
     public List<string> Query(string queryStr) {
       List<string> res = new List<string>();
       string url = this.MakeUrl("autocomplete/" + queryStr);
@@ -118,21 +144,8 @@ namespace ConstructorIOClient {
 
     public bool RemoveItem(string itemName, string autocompleteSection) {
       string url = this.MakeUrl("v1/item");
-      string creds = "Basic " + Convert.ToBase64String(
-          Encoding.ASCII.GetBytes(this.apiToken + ":"));
-      JObject values = JObject.FromObject(CreateItemParams(itemName, autocompleteSection, false, null));
-      byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
-      HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-      req.Method = "DELETE";
-      req.ContentType = "application/json";
-      req.Headers.Add("Authorization", creds);
-      req.ContentLength = buf.Length;
-      using (Stream reqStream = req.GetRequestStream()) {
-        reqStream.Write(buf, 0, buf.Length);
-      }
-      using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
-        return (int)resp.StatusCode == 204;
-      }
+      Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, null);
+      return this.MakeOtherReq(url, "DELETE", values);
     }
 
     public bool ModifyItem(string itemName, string newItemName, string autocompleteSection) {
@@ -141,21 +154,10 @@ namespace ConstructorIOClient {
 
     public bool ModifyItem(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict) {
       string url = this.MakeUrl("v1/item");
-      string creds = "Basic " + Convert.ToBase64String(
-          Encoding.ASCII.GetBytes(this.apiToken + ":"));
-      JObject values = JObject.FromObject(CreateItemParams(itemName, autocompleteSection, false, paramDict));
-      byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
-      HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-      req.Method = "PUT";
-      req.ContentType = "application/json";
-      req.Headers.Add("Authorization", creds);
-      req.ContentLength = buf.Length;
-      using (Stream reqStream = req.GetRequestStream()) {
-        reqStream.Write(buf, 0, buf.Length);
-      }
-      using (HttpWebResponse resp = (HttpWebResponse) req.GetResponse()) {
-        return (int)resp.StatusCode == 204;
-      }
+      // mandatory addition of new_item_name!
+      paramDict.Add("new_item_name", newItemName);
+      Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
+      return this.MakeOtherReq(url, "PUT", values);
     }
 
     public bool TrackConversion(string term, string autocompleteSection) {
