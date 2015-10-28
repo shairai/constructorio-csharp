@@ -142,6 +142,12 @@ namespace ConstructorIOClient {
       return response == "";
     }
 
+    public bool AddItem(string itemName, string autocompleteSection, IDictionary<string, object> paramDict, List<string> keywords) {
+      JArray arr = JArray.FromObject(keywords);
+      paramDict.Add("keywords", arr.ToString());
+      return this.AddItem(itemName, autocompleteSection, paramDict);
+    }
+
     public bool RemoveItem(string itemName, string autocompleteSection) {
       string url = this.MakeUrl("v1/item");
       Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, null);
@@ -154,10 +160,16 @@ namespace ConstructorIOClient {
 
     public bool ModifyItem(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict) {
       string url = this.MakeUrl("v1/item");
-      // mandatory addition of new_item_name!
+      // new_item_name is mandatory param!
       paramDict.Add("new_item_name", newItemName);
       Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
       return this.MakeOtherReq(url, "PUT", values);
+    }
+
+    public bool ModifyItem(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict, List<string> keywords) {
+      JArray arr = JArray.FromObject(keywords);
+      paramDict.Add("keywords", arr.ToString());
+      return this.ModifyItem(itemName, newItemName, autocompleteSection, paramDict);
     }
 
     public bool TrackConversion(string term, string autocompleteSection) {
