@@ -59,7 +59,7 @@ namespace ConstructorTest {
     public void TestAdd() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
       string itemName = GenerateRandString();
-      Dictionary<string, string> paramDict1 = new Dictionary<string, object>();
+      Dictionary<string, object> paramDict1 = new Dictionary<string, object>();
       paramDict1.Add("suggested_score", 1337);
       Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "Addition without params returns alright");
       Assert.IsTrue(client.AddItem(itemName, "Search Suggestions", paramDict1), "Addition with params returns alright");
