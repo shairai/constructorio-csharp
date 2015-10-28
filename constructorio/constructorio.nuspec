@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+	<metadata>
+		<id>constructor.io</id>
+		<version>1.0.0</version>
+		<authors>constructor.io</authors>
+		<owners>constructor.io</owners>
+		<licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+		<projectUrl>https://constructor.io/</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>C# Client for Constructor.IO API.</description>
+		<releaseNotes></releaseNotes>
+		<copyright>Copyright 2015</copyright>
+		<tags>autocomplete constructor</tags>
+		<dependencies>
+			<dependency id="Newtonsoft.Json" version="4.5.11" />
+		</dependencies>
+	</metadata>
+</package>

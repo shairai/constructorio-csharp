@@ -1,3 +1,4 @@
 *.exe
 *.dll
+*.nupkg
 TestResult.xml
