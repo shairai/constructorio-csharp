@@ -6,6 +6,12 @@ using ConstructorIOClient;
 namespace ConstructorTest {
   [TestFixture]
   public class ConstructorTest {
+    static Random random;
+
+    static ConstructorTest() {
+      random = new Random();
+    }
+
     [Test]
     public void TestSerializeParams() {
       Dictionary<string, object> paramDict = new Dictionary<string, object>();
@@ -47,7 +53,6 @@ namespace ConstructorTest {
     }
 
     public static string GenerateRandString() {
-      Random random = new Random();
       string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       char[] stringChars = new char[10];
       for (int i = 0; i < stringChars.Length; i++) { stringChars[i] = chars[random.Next(chars.Length)];
@@ -58,11 +63,12 @@ namespace ConstructorTest {
     [Test]
     public void TestAdd() {
       ConstructorIO client = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-      string itemName = GenerateRandString();
+      string itemName1 = GenerateRandString();
+      string itemName2 = GenerateRandString();
       Dictionary<string, object> paramDict1 = new Dictionary<string, object>();
       paramDict1.Add("suggested_score", 1337);
-      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions"), "Addition without params returns alright");
-      Assert.IsTrue(client.AddItem(itemName, "Search Suggestions", paramDict1), "Addition with params returns alright");
+      Assert.IsTrue(client.AddItem(itemName1, "Search Suggestions"), "Addition without params returns alright");
+      Assert.IsTrue(client.AddItem(itemName2, "Search Suggestions", paramDict1), "Addition with params returns alright");
     }
     
     [Test]

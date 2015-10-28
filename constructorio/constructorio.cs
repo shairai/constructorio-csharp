@@ -118,9 +118,9 @@ namespace ConstructorIOClient {
 
     public bool RemoveItem(string itemName, string autocompleteSection) {
       string url = this.MakeUrl("v1/item");
-      string creds = Convert.ToBase64String(
+      string creds = "Basic " + Convert.ToBase64String(
           Encoding.ASCII.GetBytes(this.apiToken + ":"));
-      JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, null));
+      JObject values = JObject.FromObject(CreateItemParams(itemName, autocompleteSection, false, null));
       byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
       HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
       req.Method = "DELETE";
@@ -141,9 +141,9 @@ namespace ConstructorIOClient {
 
     public bool ModifyItem(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict) {
       string url = this.MakeUrl("v1/item");
-      string creds = Convert.ToBase64String(
+      string creds = "Basic " + Convert.ToBase64String(
           Encoding.ASCII.GetBytes(this.apiToken + ":"));
-      JObject values = new JObject(CreateItemParams(itemName, autocompleteSection, false, paramDict));
+      JObject values = JObject.FromObject(CreateItemParams(itemName, autocompleteSection, false, paramDict));
       byte[] buf = Encoding.UTF8.GetBytes(values.ToString());
       HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
       req.Method = "PUT";
