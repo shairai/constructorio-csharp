@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>Constructor.Io</id>
-		<version>0.0.1</version>
+		<version>0.0.2</version>
 		<authors>constructor.io</authors>
 		<owners>constructor.io</owners>
 		<licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
@@ -16,5 +16,9 @@
 		<dependencies>
 			<dependency id="Newtonsoft.Json" version="4.5.11" />
 		</dependencies>
+
 	</metadata>
+	<files>
+		<file src="lib\*.dll" target="lib" />
+	</files>
 </package>
