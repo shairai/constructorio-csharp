@@ -58,6 +58,8 @@ namespace Sample_App
             Dictionary<string, object> values1 = ConstructorIO.CreateItemParams("a4", "Products", false, null);
 
 
+            //curl -u "UuXqlIafeKvwop6DaRwP:" "https://ac.cnstrc.com/v1/verify?autocomplete_key=5tHZR5xflF6bNLgvpa60"
+
             object[] sItems = new object[] {values, values1 };   
             //objDic.Add("items", sItems);
             //bool bSuccess = constructorClient.BatchAdd(objDic, ConstructorIO.AutoCompleListType.SearchSuggestions);

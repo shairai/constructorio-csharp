@@ -11,6 +11,10 @@ using System.Reflection;
 
 namespace ConstructorIOClient
 {
+    /// <summary>
+    ///  StringValueAttribute
+    /// </summary>
+
     public class StringValueAttribute : Attribute
     {
         private string m_sValue;
@@ -25,6 +29,10 @@ namespace ConstructorIOClient
             get { return m_sValue; }
         }
     }
+
+    /// <summary>
+    /// StringEnum
+    /// </summary>
     public class StringEnum
     {
         private static Hashtable m_hsStringValues = new Hashtable();
@@ -51,6 +59,10 @@ namespace ConstructorIOClient
             return output;
         }
     }
+
+    /// <summary>
+    /// ConstructorIO
+    /// </summary>
     public class ConstructorIO
     {
         public string apiToken;
@@ -58,6 +70,9 @@ namespace ConstructorIOClient
         public string protocol;
         public string host;
 
+        /// <summary>
+        /// AutoCompleListType - built in types
+        /// </summary>
         public enum AutoCompleListType
         {
             [StringValue("Products")]
@@ -66,6 +81,13 @@ namespace ConstructorIOClient
             SearchSuggestions,
         };
 
+        /// <summary>
+        /// This is contracutor for class ConstructorIO. More details 
+        /// </summary>
+        /// <param name="apiToken">your API token</param>
+        /// <param name="autocompleteKey">autocomplete key</param>
+        /// <param name="protocol">protocol</param>
+        /// <param name="host">host</param>
         public ConstructorIO(string apiToken, string autocompleteKey, string protocol = "https", string host = "ac.cnstrc.com")
         {
             this.apiToken = apiToken;
@@ -74,6 +96,11 @@ namespace ConstructorIOClient
             this.host = host;
         }
 
+        /// <summary>
+        /// SerializeParams
+        /// </summary>
+        /// <param name="paramDict"></param>
+        /// <returns></returns>
         public static string SerializeParams(IDictionary<string, object> paramDict)
         {
             var list = new List<string>();
@@ -84,19 +111,33 @@ namespace ConstructorIOClient
             return string.Join("&", list);
         }
 
+
+        /// <summary>
+        /// MakeUrl
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <param name="keys"></param>
+        /// <returns></returns>
         public string MakeUrl(string endpoint, IDictionary<string, object> keys)
         {
             Dictionary<string, object> paramDict = new Dictionary<string, object>(keys);
             paramDict.Add("autocomplete_key", this.autocompleteKey);
-            string[] urlMembers = new string[] {
-        this.protocol,
-        this.host,
-        endpoint,
-        SerializeParams(paramDict)
-      };
+            string[] urlMembers = new string[] 
+            {
+                this.protocol,
+                this.host,
+                endpoint,
+                SerializeParams(paramDict)
+            };
+
             return String.Format("{0}://{1}/{2}?{3}", urlMembers);
         }
 
+        /// <summary>
+        /// MakeUrl
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <returns></returns>
         public string MakeUrl(string endpoint)
         {
             // empty keys
@@ -104,11 +145,27 @@ namespace ConstructorIOClient
             return this.MakeUrl(endpoint, keys);
         }
 
+        /// <summary>
+        /// CreateItemParams1
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <param name="isTracking"></param>
+        /// <param name="otherParams"></param>
+        /// <returns></returns>
         public Dictionary<string, object> CreateItemParams1(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, object> otherParams)
         {
             return CreateItemParams(itemName, autocompleteSection, isTracking, otherParams);
         }
 
+        /// <summary>
+        /// CreateItemParams
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <param name="isTracking"></param>
+        /// <param name="otherParams"></param>
+        /// <returns>Dictionary<string, object></returns>
         public static Dictionary<string, object> CreateItemParams(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, object> otherParams)
         {
             Dictionary<string, object> paramDict = new Dictionary<string, object>();
@@ -134,6 +191,12 @@ namespace ConstructorIOClient
             return paramDict;
         }
 
+        /// <summary>
+        /// MakePostReq
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="values"></param>
+        /// <returns>string</returns>
         private string MakePostReq(string url, IDictionary<string, object> values)
         {
             using (WebClient wc = new WebClient())
@@ -142,6 +205,10 @@ namespace ConstructorIOClient
                 {
                     JObject jobj = JObject.FromObject(values);
                     string jsonParams = jobj.ToString();
+                    jsonParams = jsonParams.Replace("\\\"", "\"");
+                    jsonParams = jsonParams.Replace("\"[","[");
+                    jsonParams = jsonParams.Replace("]\"", "]");
+
                     wc.Headers[HttpRequestHeader.ContentType] = "application/json";
                     string creds = Convert.ToBase64String(
                         Encoding.ASCII.GetBytes(this.apiToken + ":"));
@@ -161,6 +228,11 @@ namespace ConstructorIOClient
             }
         }
 
+        /// <summary>
+        /// MakeGetReq
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>bool</returns>
         private bool MakeGetReq(string url)
         {
             try
@@ -178,6 +250,13 @@ namespace ConstructorIOClient
             return false;
         }
 
+        /// <summary>
+        /// MakeOtherReq
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="verb"></param>
+        /// <param name="valueDict"></param>
+        /// <returns>bool</returns>
         private bool MakeOtherReq(string url, string verb, IDictionary<string, object> valueDict)
         {
             try
@@ -213,6 +292,11 @@ namespace ConstructorIOClient
             }
         }
 
+        /// <summary>
+        /// Query
+        /// </summary>
+        /// <param name="queryStr"></param>
+        /// <returns></returns>
         public List<string> Query(string queryStr)
         {
             List<string> res = new List<string>();
@@ -232,6 +316,10 @@ namespace ConstructorIOClient
             return res;
         }
 
+        /// <summary>
+        /// Verify
+        /// </summary>
+        /// <returns>bool</returns>
         public bool Verify()
         {
             string url = this.MakeUrl("v1/verify");
@@ -239,11 +327,24 @@ namespace ConstructorIOClient
             return this.MakeOtherReq(url, "GET", keys);
         }
 
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <returns>bool</returns>
         public bool Add(string itemName, string autocompleteSection)
         {
             return this.Add(itemName, autocompleteSection, new Dictionary<string, object>());
         }
 
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <param name="paramDict"></param>
+        /// <returns>bool</returns>
         public bool Add(string itemName, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/item");

@@ -156,8 +156,6 @@
             this.dataGridViewData.TabIndex = 10;
             this.dataGridViewData.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridViewData_CellBeginEdit);
             this.dataGridViewData.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            this.dataGridViewData.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewData_CellEndEdit);
-            this.dataGridViewData.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridViewData_CellValidating);
             // 
             // groupBox1
             // 

@@ -76,11 +76,11 @@ namespace Sample_App__Add_Modify_Delete__
             if(dataGridViewData.Rows[0].Cells["suggested_score"].Value != null)
                 objDic.Add("suggested_score", Convert.ToInt32(dataGridViewData.Rows[0].Cells["suggested_score"].Value));
 
-            if (dataGridViewData.Rows[0].Cells["keywords"] != null)
+            if (dataGridViewData.Rows[0].Cells["keywords"].Value != null)
             {
                 this.GenerateListOfKeywords();
-                //objDic.Add("keywords",m_arKeywords);
-                objDic.Add("keywords:", "[battery-powered,drills,drywall]");
+                //objDic.Add("keywords:", "[" + m_arKeywords.ToString() + "]");
+                objDic.Add("keywords", "[\"a\",\"b\",\"c\"]");
             }
             if (dataGridViewData.Rows[0].Cells["url"].Value != null)
                 objDic.Add("url", dataGridViewData.Rows[0].Cells["url"].Value);
@@ -127,13 +127,7 @@ namespace Sample_App__Add_Modify_Delete__
                 switch (m_sActionValue)
                 {
                     case "Add":
-                        if (dataGridViewData.Rows[0].Cells["keywords"] != null)
-                        {
-                           this.GenerateListOfKeywords();
                            bResult = m_constructorClient.Add(dataGridViewData.Rows[0].Cells["item_name"].Value.ToString(), dataGridViewData.Rows[0].Cells["autocomplete_section"].Value.ToString(), this.LoadDataToDictionary());
-                        }
-                        else
-                            bResult = m_constructorClient.Add(dataGridViewData.Rows[0].Cells["item_name"].Value.ToString(), dataGridViewData.Rows[0].Cells["autocomplete_section"].Value.ToString(), this.LoadDataToDictionary());
                         break;
                     case "Modify ( name of item )":
                         if(dataGridViewData.Rows[0].Cells["autocomplete_section"].Value.ToString() == "Products")
@@ -156,7 +150,6 @@ namespace Sample_App__Add_Modify_Delete__
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             pictureBoxLoading.Visible = false;
-
         }
 
         private void comboBoxType_SelectedIndexChanged(object sender, EventArgs e)
@@ -205,14 +198,6 @@ namespace Sample_App__Add_Modify_Delete__
         private void chkOptional_CheckedChanged(object sender, EventArgs e)
         {
             this.ClearData();
-        }
-
-        private void dataGridViewData_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-        }
-
-        private void dataGridViewData_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
         }
 
         private void dataGridViewData_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
