@@ -42,22 +42,27 @@
             this.txtFile = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.grpKeys = new System.Windows.Forms.GroupBox();
+            this.btnVerify = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.txtKey = new System.Windows.Forms.TextBox();
             this.txtAPIToken = new System.Windows.Forms.TextBox();
             this.lblKeyAPI = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.backgroundWorkerVerify = new System.ComponentModel.BackgroundWorker();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCSVData)).BeginInit();
             this.grpUpload.SuspendLayout();
             this.grpCSV.SuspendLayout();
             this.grpKeys.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridViewCSVData
             // 
+            this.dataGridViewCSVData.AllowUserToAddRows = false;
             this.dataGridViewCSVData.AllowUserToDeleteRows = false;
             this.dataGridViewCSVData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewCSVData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -65,7 +70,7 @@
             this.dataGridViewCSVData.Name = "dataGridViewCSVData";
             this.dataGridViewCSVData.ReadOnly = true;
             this.dataGridViewCSVData.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            this.dataGridViewCSVData.Size = new System.Drawing.Size(849, 284);
+            this.dataGridViewCSVData.Size = new System.Drawing.Size(989, 284);
             this.dataGridViewCSVData.TabIndex = 0;
             // 
             // btnLoadCSV
@@ -94,7 +99,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(784, 431);
+            this.btnExit.Location = new System.Drawing.Point(910, 431);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 23);
             this.btnExit.TabIndex = 3;
@@ -109,12 +114,13 @@
             // 
             // grpUpload
             // 
+            this.grpUpload.Controls.Add(this.pictureBoxLoading);
             this.grpUpload.Controls.Add(this.label1);
             this.grpUpload.Controls.Add(this.comboBoxType);
             this.grpUpload.Controls.Add(this.btnUpload);
-            this.grpUpload.Location = new System.Drawing.Point(537, 64);
+            this.grpUpload.Location = new System.Drawing.Point(617, 64);
             this.grpUpload.Name = "grpUpload";
-            this.grpUpload.Size = new System.Drawing.Size(322, 71);
+            this.grpUpload.Size = new System.Drawing.Size(382, 71);
             this.grpUpload.TabIndex = 4;
             this.grpUpload.TabStop = false;
             this.grpUpload.Text = "3. Upload";
@@ -145,7 +151,7 @@
             this.grpCSV.Controls.Add(this.txtFile);
             this.grpCSV.Controls.Add(this.label2);
             this.grpCSV.Controls.Add(this.btnLoadCSV);
-            this.grpCSV.Location = new System.Drawing.Point(273, 64);
+            this.grpCSV.Location = new System.Drawing.Point(353, 64);
             this.grpCSV.Name = "grpCSV";
             this.grpCSV.Size = new System.Drawing.Size(258, 71);
             this.grpCSV.TabIndex = 5;
@@ -171,16 +177,27 @@
             // 
             // grpKeys
             // 
+            this.grpKeys.Controls.Add(this.btnVerify);
             this.grpKeys.Controls.Add(this.label3);
             this.grpKeys.Controls.Add(this.txtKey);
             this.grpKeys.Controls.Add(this.txtAPIToken);
             this.grpKeys.Controls.Add(this.lblKeyAPI);
             this.grpKeys.Location = new System.Drawing.Point(12, 64);
             this.grpKeys.Name = "grpKeys";
-            this.grpKeys.Size = new System.Drawing.Size(255, 71);
+            this.grpKeys.Size = new System.Drawing.Size(335, 71);
             this.grpKeys.TabIndex = 6;
             this.grpKeys.TabStop = false;
             this.grpKeys.Text = "1. Enter keys";
+            // 
+            // btnVerify
+            // 
+            this.btnVerify.Location = new System.Drawing.Point(248, 28);
+            this.btnVerify.Name = "btnVerify";
+            this.btnVerify.Size = new System.Drawing.Size(75, 23);
+            this.btnVerify.TabIndex = 4;
+            this.btnVerify.Text = "Verify";
+            this.btnVerify.UseVisualStyleBackColor = true;
+            this.btnVerify.Click += new System.EventHandler(this.btnVerify_Click);
             // 
             // label3
             // 
@@ -216,6 +233,19 @@
             this.lblKeyAPI.TabIndex = 0;
             this.lblKeyAPI.Text = "API token";
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Location = new System.Drawing.Point(-1, -1);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1010, 41);
+            this.panel1.TabIndex = 15;
+            // 
+            // backgroundWorkerVerify
+            // 
+            this.backgroundWorkerVerify.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerVerify_DoWork);
+            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -227,20 +257,24 @@
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
             // 
-            // panel1
+            // pictureBoxLoading
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(878, 41);
-            this.panel1.TabIndex = 15;
+            this.pictureBoxLoading.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBoxLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBoxLoading.Image = global::Sample_App.Properties.Resources.ajax_loader;
+            this.pictureBoxLoading.Location = new System.Drawing.Point(321, 13);
+            this.pictureBoxLoading.Name = "pictureBoxLoading";
+            this.pictureBoxLoading.Size = new System.Drawing.Size(47, 47);
+            this.pictureBoxLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxLoading.TabIndex = 16;
+            this.pictureBoxLoading.TabStop = false;
+            this.pictureBoxLoading.Visible = false;
             // 
             // SampleForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(876, 463);
+            this.ClientSize = new System.Drawing.Size(1007, 463);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.grpKeys);
             this.Controls.Add(this.grpCSV);
@@ -259,8 +293,9 @@
             this.grpCSV.PerformLayout();
             this.grpKeys.ResumeLayout(false);
             this.grpKeys.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -286,6 +321,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btnVerify;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerVerify;
+        private System.Windows.Forms.PictureBox pictureBoxLoading;
     }
 }
 

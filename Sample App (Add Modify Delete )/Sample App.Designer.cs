@@ -37,14 +37,6 @@
             this.grpUpload = new System.Windows.Forms.GroupBox();
             this.comboBoxType = new System.Windows.Forms.ComboBox();
             this.dataGridViewData = new System.Windows.Forms.DataGridView();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
-            this.btnProcess = new System.Windows.Forms.Button();
-            this.comboBoxAction = new System.Windows.Forms.ComboBox();
-            this.btnExit = new System.Windows.Forms.Button();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.item_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.autocomplete_section = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.suggested_score = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,9 +45,18 @@
             this.image_url = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
+            this.btnProcess = new System.Windows.Forms.Button();
+            this.comboBoxAction = new System.Windows.Forms.ComboBox();
+            this.btnExit = new System.Windows.Forms.Button();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.chkRequired = new System.Windows.Forms.CheckBox();
             this.chkOptional = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnVerify = new System.Windows.Forms.Button();
             this.grpKeys.SuspendLayout();
             this.grpUpload.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewData)).BeginInit();
@@ -68,13 +69,14 @@
             // 
             // grpKeys
             // 
+            this.grpKeys.Controls.Add(this.btnVerify);
             this.grpKeys.Controls.Add(this.label1);
             this.grpKeys.Controls.Add(this.txtKey);
             this.grpKeys.Controls.Add(this.txtAPI);
             this.grpKeys.Controls.Add(this.label2);
             this.grpKeys.Location = new System.Drawing.Point(12, 59);
             this.grpKeys.Name = "grpKeys";
-            this.grpKeys.Size = new System.Drawing.Size(255, 71);
+            this.grpKeys.Size = new System.Drawing.Size(326, 71);
             this.grpKeys.TabIndex = 8;
             this.grpKeys.TabStop = false;
             this.grpKeys.Text = "1. Enter keys";
@@ -116,9 +118,9 @@
             // grpUpload
             // 
             this.grpUpload.Controls.Add(this.comboBoxType);
-            this.grpUpload.Location = new System.Drawing.Point(273, 59);
+            this.grpUpload.Location = new System.Drawing.Point(344, 59);
             this.grpUpload.Name = "grpUpload";
-            this.grpUpload.Size = new System.Drawing.Size(170, 71);
+            this.grpUpload.Size = new System.Drawing.Size(174, 71);
             this.grpUpload.TabIndex = 9;
             this.grpUpload.TabStop = false;
             this.grpUpload.Text = "2. Section";
@@ -130,7 +132,7 @@
             this.comboBoxType.Items.AddRange(new object[] {
             "Products",
             "Search Suggestions"});
-            this.comboBoxType.Location = new System.Drawing.Point(11, 28);
+            this.comboBoxType.Location = new System.Drawing.Point(15, 27);
             this.comboBoxType.Name = "comboBoxType";
             this.comboBoxType.Size = new System.Drawing.Size(143, 21);
             this.comboBoxType.TabIndex = 3;
@@ -157,14 +159,67 @@
             this.dataGridViewData.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridViewData_CellBeginEdit);
             this.dataGridViewData.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
+            // item_name
+            // 
+            this.item_name.HeaderText = "Item Name ( The name of the item, as it will appear in the autocomplete suggestio" +
+    "ns ) Requred";
+            this.item_name.Name = "item_name";
+            // 
+            // autocomplete_section
+            // 
+            this.autocomplete_section.HeaderText = resources.GetString("autocomplete_section.HeaderText");
+            this.autocomplete_section.Name = "autocomplete_section";
+            this.autocomplete_section.ReadOnly = true;
+            this.autocomplete_section.Width = 140;
+            // 
+            // suggested_score
+            // 
+            this.suggested_score.HeaderText = resources.GetString("suggested_score.HeaderText");
+            this.suggested_score.Name = "suggested_score";
+            this.suggested_score.Width = 140;
+            // 
+            // keywords
+            // 
+            this.keywords.HeaderText = "Keywords ( An array of keywords for this item. Keywords are useful if you want a " +
+    "product name to appear when a user enters a searchterm that isn’t in the product" +
+    " name iteslf. )";
+            this.keywords.Name = "keywords";
+            this.keywords.Width = 140;
+            // 
+            // url
+            // 
+            this.url.HeaderText = "Url ( A URL to directly send the user after selecting the item )";
+            this.url.Name = "url";
+            // 
+            // image_url
+            // 
+            this.image_url.HeaderText = "Image Url ( A URL that points to an image you’d like displayed next to some item " +
+    "(only applicable when url is supplied) ";
+            this.image_url.Name = "image_url";
+            this.image_url.Width = 140;
+            // 
+            // description
+            // 
+            this.description.HeaderText = "Description ( A description for some item (only applicable when url is supplied )" +
+    " ";
+            this.description.Name = "description";
+            // 
+            // id
+            // 
+            this.id.HeaderText = "Id ( An arbitrary ID you would like associated with this item. You can use this f" +
+    "ield to store your own IDs of the items to more easily access them in other API " +
+    "calls )";
+            this.id.Name = "id";
+            this.id.Width = 140;
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.pictureBoxLoading);
             this.groupBox1.Controls.Add(this.btnProcess);
             this.groupBox1.Controls.Add(this.comboBoxAction);
-            this.groupBox1.Location = new System.Drawing.Point(633, 59);
+            this.groupBox1.Location = new System.Drawing.Point(700, 59);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(423, 71);
+            this.groupBox1.Size = new System.Drawing.Size(356, 71);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "4. Action";
@@ -174,7 +229,7 @@
             this.pictureBoxLoading.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBoxLoading.Image = global::Sample_App__Add_Modify_Delete__.Properties.Resources.ajax_loader;
-            this.pictureBoxLoading.Location = new System.Drawing.Point(303, 14);
+            this.pictureBoxLoading.Location = new System.Drawing.Point(261, 16);
             this.pictureBoxLoading.Name = "pictureBoxLoading";
             this.pictureBoxLoading.Size = new System.Drawing.Size(47, 47);
             this.pictureBoxLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -241,59 +296,6 @@
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
             // 
-            // item_name
-            // 
-            this.item_name.HeaderText = "Item Name ( The name of the item, as it will appear in the autocomplete suggestio" +
-    "ns ) Requred";
-            this.item_name.Name = "item_name";
-            // 
-            // autocomplete_section
-            // 
-            this.autocomplete_section.HeaderText = resources.GetString("autocomplete_section.HeaderText");
-            this.autocomplete_section.Name = "autocomplete_section";
-            this.autocomplete_section.ReadOnly = true;
-            this.autocomplete_section.Width = 140;
-            // 
-            // suggested_score
-            // 
-            this.suggested_score.HeaderText = resources.GetString("suggested_score.HeaderText");
-            this.suggested_score.Name = "suggested_score";
-            this.suggested_score.Width = 140;
-            // 
-            // keywords
-            // 
-            this.keywords.HeaderText = "Keywords ( An array of keywords for this item. Keywords are useful if you want a " +
-    "product name to appear when a user enters a searchterm that isn’t in the product" +
-    " name iteslf. )";
-            this.keywords.Name = "keywords";
-            this.keywords.Width = 140;
-            // 
-            // url
-            // 
-            this.url.HeaderText = "Url ( A URL to directly send the user after selecting the item )";
-            this.url.Name = "url";
-            // 
-            // image_url
-            // 
-            this.image_url.HeaderText = "Image Url ( A URL that points to an image you’d like displayed next to some item " +
-    "(only applicable when url is supplied) ";
-            this.image_url.Name = "image_url";
-            this.image_url.Width = 140;
-            // 
-            // description
-            // 
-            this.description.HeaderText = "Description ( A description for some item (only applicable when url is supplied )" +
-    " ";
-            this.description.Name = "description";
-            // 
-            // id
-            // 
-            this.id.HeaderText = "Id ( An arbitrary ID you would like associated with this item. You can use this f" +
-    "ield to store your own IDs of the items to more easily access them in other API " +
-    "calls )";
-            this.id.Name = "id";
-            this.id.Width = 140;
-            // 
             // chkRequired
             // 
             this.chkRequired.AutoSize = true;
@@ -322,12 +324,21 @@
             // 
             this.groupBox2.Controls.Add(this.chkRequired);
             this.groupBox2.Controls.Add(this.chkOptional);
-            this.groupBox2.Location = new System.Drawing.Point(449, 59);
+            this.groupBox2.Location = new System.Drawing.Point(524, 59);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(170, 71);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "3. Parameters";
+            // 
+            // btnVerify
+            // 
+            this.btnVerify.Location = new System.Drawing.Point(233, 27);
+            this.btnVerify.Name = "btnVerify";
+            this.btnVerify.Size = new System.Drawing.Size(75, 23);
+            this.btnVerify.TabIndex = 5;
+            this.btnVerify.Text = "Verify";
+            this.btnVerify.UseVisualStyleBackColor = true;
             // 
             // frmSample
             // 
@@ -391,6 +402,7 @@
         private System.Windows.Forms.CheckBox chkOptional;
         private System.Windows.Forms.CheckBox chkRequired;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button btnVerify;
     }
 }
 

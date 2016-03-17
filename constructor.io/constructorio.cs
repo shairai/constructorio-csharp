@@ -146,19 +146,6 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// CreateItemParams1
-        /// </summary>
-        /// <param name="itemName"></param>
-        /// <param name="autocompleteSection"></param>
-        /// <param name="isTracking"></param>
-        /// <param name="otherParams"></param>
-        /// <returns></returns>
-        public Dictionary<string, object> CreateItemParams1(string itemName, string autocompleteSection, bool isTracking, IDictionary<string, object> otherParams)
-        {
-            return CreateItemParams(itemName, autocompleteSection, isTracking, otherParams);
-        }
-
-        /// <summary>
         /// CreateItemParams
         /// </summary>
         /// <param name="itemName"></param>
@@ -233,21 +220,32 @@ namespace ConstructorIOClient
         /// </summary>
         /// <param name="url"></param>
         /// <returns>bool</returns>
-        private bool MakeGetReq(string url)
+        private string MakeGetReq(string url)
         {
+            String sResponse = String.Empty;
+
             try
             {
-                string creds = "Basic " + Convert.ToBase64String(
-                Encoding.ASCII.GetBytes(this.apiToken + ":"));
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Headers.Add("auth_token", creds);
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+                request.Method = "GET";
+                sResponse = String.Empty;
 
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream stream = response.GetResponseStream();
+                string creds = Convert.ToBase64String(Encoding.ASCII.GetBytes(this.apiToken + ":"));
+                request.Headers[HttpRequestHeader.Authorization] = String.Format("Basic {0}", creds);
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    Stream dataStream = response.GetResponseStream();
+                    StreamReader reader = new StreamReader(dataStream);
+                    sResponse = reader.ReadToEnd();
+                    reader.Close();
+                    dataStream.Close();
+                }
             }
             catch (Exception ex)
-            { }
-            return false;
+            {
+            }
+
+            return sResponse;
         }
 
         /// <summary>
@@ -257,7 +255,7 @@ namespace ConstructorIOClient
         /// <param name="verb"></param>
         /// <param name="valueDict"></param>
         /// <returns>bool</returns>
-        private bool MakeOtherReq(string url, string verb, IDictionary<string, object> valueDict)
+        public bool MakeOtherReq(string url, string verb, IDictionary<string, object> valueDict)
         {
             try
             {
@@ -323,8 +321,12 @@ namespace ConstructorIOClient
         public bool Verify()
         {
             string url = this.MakeUrl("v1/verify");
-            Dictionary<string, object> keys = new Dictionary<string, object>();
-            return this.MakeOtherReq(url, "GET", keys);
+            string sResponse = this.MakeGetReq(url);
+
+            if (sResponse.IndexOf("successful authentication") > 0)
+                return true;
+
+            return false;
         }
 
         /// <summary>
@@ -348,108 +350,211 @@ namespace ConstructorIOClient
         public bool Add(string itemName, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/item");
-            Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
-            string response = this.MakePostReq(url, values);
+
+                Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
+                string response = this.MakePostReq(url, values);
+
             return response == "";
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <param name="paramDict"></param>
+        /// <param name="keywords"></param>
+        /// <returns></returns>
         public bool Add(string itemName, string autocompleteSection, IDictionary<string, object> paramDict, List<string> keywords)
         {
             JArray arr = JArray.FromObject(keywords);
-            paramDict.Add("keywords", arr.ToString());
+
+                paramDict.Add("keywords", arr.ToString());
+
             return this.Add(itemName, autocompleteSection, paramDict);
         }
 
+        /// <summary>
+        /// Remove
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <returns>bool</returns>
         public bool Remove(string itemName, string autocompleteSection)
         {
             string url = this.MakeUrl("v1/item");
-            Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, null);
+
+                Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, null);
+
             return this.MakeOtherReq(url, "DELETE", values);
         }
 
+        /// <summary>
+        /// Modify
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="newItemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <returns>bool</returns>
         public bool Modify(string itemName, string newItemName, string autocompleteSection)
         {
             return this.Modify(itemName, newItemName, autocompleteSection, new Dictionary<string, object>());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="newItemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <param name="paramDict"></param>
+        /// <returns></returns>
         public bool Modify(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/item");
-            // new_item_name is mandatory param!
-            paramDict.Add("new_item_name", newItemName);
-            Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
+
+                // new_item_name is mandatory param!
+                paramDict.Add("new_item_name", newItemName);
+                Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
+
             return this.MakeOtherReq(url, "PUT", values);
         }
 
+        /// <summary>
+        /// Modify
+        /// </summary>
+        /// <param name="itemName"></param>
+        /// <param name="newItemName"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <param name="paramDict"></param>
+        /// <param name="keywords"></param>
+        /// <returns>bool</returns>
         public bool Modify(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict, List<string> keywords)
         {
             JArray arr = JArray.FromObject(keywords);
-            paramDict.Add("keywords", arr.ToString());
+
+                paramDict.Add("keywords", arr.ToString());
+
             return this.Modify(itemName, newItemName, autocompleteSection, paramDict);
         }
 
+        /// <summary>
+        /// TrackConversion
+        /// </summary>
+        /// <param name="term"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <returns>bool</returns>
         public bool TrackConversion(string term, string autocompleteSection)
         {
             return this.TrackConversion(term, autocompleteSection, new Dictionary<string, object>());
         }
 
+        /// <summary>
+        /// TrackConversion
+        /// </summary>
+        /// <param name="term"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <param name="paramDict"></param>
+        /// <returns>bool</returns>
         public bool TrackConversion(string term, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/conversion");
-            Dictionary<string, object> values = CreateItemParams(term, autocompleteSection, true, paramDict);
-            string response = this.MakePostReq(url, values);
+
+                Dictionary<string, object> values = CreateItemParams(term, autocompleteSection, true, paramDict);
+                string response = this.MakePostReq(url, values);
+
             return response == "";
         }
 
+        /// <summary>
+        /// TrackClickThrough
+        /// </summary>
+        /// <param name="term"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <returns>bool</returns>
         public bool TrackClickThrough(string term, string autocompleteSection)
         {
             return this.TrackClickThrough(term, autocompleteSection, new Dictionary<string, object>());
         }
 
+        /// <summary>
+        /// TrackClickThrough
+        /// </summary>
+        /// <param name="term"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <param name="paramDict"></param>
+        /// <returns>bool</returns>
         public bool TrackClickThrough(string term, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/click_through");
-            Dictionary<string, object> values = CreateItemParams(term, autocompleteSection, true, paramDict);
-            string response = this.MakePostReq(url, values);
+
+                Dictionary<string, object> values = CreateItemParams(term, autocompleteSection, true, paramDict);
+                string response = this.MakePostReq(url, values);
+
             return response == "";
         }
 
+        /// <summary>
+        /// TrackSearch
+        /// </summary>
+        /// <param name="term"></param>
+        /// <returns>bool</returns>
         public bool TrackSearch(string term)
         {
             return this.TrackSearch(term, new Dictionary<string, object>());
         }
 
+        /// <summary>
+        /// TrackSearch
+        /// </summary>
+        /// <param name="term"></param>
+        /// <param name="paramDict"></param>
+        /// <returns></returns>
         public bool TrackSearch(string term, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/search");
-            Dictionary<string, object> values = CreateItemParams(term, null, true, paramDict);
-            string response = this.MakePostReq(url, values);
+
+                Dictionary<string, object> values = CreateItemParams(term, null, true, paramDict);
+                string response = this.MakePostReq(url, values);
+
             return response == "";
         }
 
+        /// <summary>
+        /// BatchAdd
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <returns>bool</returns>
         public bool BatchAdd(IDictionary<string, object> items, AutoCompleListType autocompleteSection)
         {
             string url = this.MakeUrl("v1/batch_items");
 
-            Dictionary<string, object> values = CreateItemsParams(items, StringEnum.GetStringValue(autocompleteSection));
-            string response = this.MakePostReq(url, values);
+                Dictionary<string, object> values = CreateItemsParams(items, StringEnum.GetStringValue(autocompleteSection));
+                string response = this.MakePostReq(url, values);
+
             return response == "";
         }
 
+        /// <summary>
+        /// CreateItemsParams
+        /// </summary>
+        /// <param name="otherParams"></param>
+        /// <param name="autocompleteSection"></param>
+        /// <returns> Dictionary<string, object></returns>
         public static Dictionary<string, object> CreateItemsParams(IDictionary<string, object> otherParams, string autocompleteSection)
         {
-
             Dictionary<string, object> paramDict = new Dictionary<string, object>();
 
-            if (otherParams != null)
-            {
-                foreach (var otherParam in otherParams)
+                if (otherParams != null)
                 {
-                    paramDict.Add(otherParam.Key, otherParam.Value);
+                    foreach (var otherParam in otherParams)
+                    {
+                        paramDict.Add(otherParam.Key, otherParam.Value);
+                    }
                 }
-            }
-
-            paramDict.Add("autocomplete_section", autocompleteSection);
+                paramDict.Add("autocomplete_section", autocompleteSection);
 
             return paramDict;
         }

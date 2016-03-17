@@ -11,6 +11,7 @@ using ConstructorIOClient;
 using System.Collections;
 using System.IO;
 using System.Windows.Controls;
+using System.Net;
 
 namespace Sample_App
 {
@@ -18,7 +19,7 @@ namespace Sample_App
     {
         private string m_sFileNameCSV;
         private DataTable m_dtCSVData;
-        public ConstructorIO constructorClient;
+        public ConstructorIO m_constructorClient;
 
         private class Item
         {
@@ -37,46 +38,29 @@ namespace Sample_App
             }
         };
 
+        /// <summary>
+        /// Sample Form
+        /// </summary>
         public SampleForm()
         {
             m_dtCSVData = new DataTable();
 
             InitializeComponent();
-            LoadData();
         }
 
-        private void LoadData()
+        /// <summary>
+        /// LoadData()
+        /// </summary>
+        private void Init()
         {
-            constructorClient  = new ConstructorIO(txtAPIToken.Text, txtKey.Text);
-
-            //not working
-            //bool isValid = constructorClient.Verify();
-            Dictionary<string, object> objDic = new Dictionary<string, object>();
-            //objDic.Add("url", "www.google1.com");
-
-            Dictionary<string, object> values = ConstructorIO.CreateItemParams("a3", "Products",false,null);
-            Dictionary<string, object> values1 = ConstructorIO.CreateItemParams("a4", "Products", false, null);
-
-
-            //curl -u "UuXqlIafeKvwop6DaRwP:" "https://ac.cnstrc.com/v1/verify?autocomplete_key=5tHZR5xflF6bNLgvpa60"
-
-            object[] sItems = new object[] {values, values1 };   
-            //objDic.Add("items", sItems);
-            //bool bSuccess = constructorClient.BatchAdd(objDic, ConstructorIO.AutoCompleListType.SearchSuggestions);
-
-            //bool success = constructorClient.Add("test4", "Products",objDic);
-            //bool success = constructorClient.AddItem("power drill1", "Products",objDic);
-            //success = constructorClient.AddItem("power drill1", "Products", objDic);
-
-            //bool success = constructorClient.RemoveItem("test1", "Search Suggestions");
-            //bool success = constructorClient.ModifyItem("power drill1", "super power drill", "Products", objDic);
-            //bool bSuccess = constructorClient.RemoveItem("super power drill", "Products");
-            //bool success = constructorClient.TrackSearch("King");
-
-            //bool bSuccess = constructorClient.BatchAddItem(objDic, "Products");
-
+            m_constructorClient  = new ConstructorIO(txtAPIToken.Text, txtKey.Text);
         }
 
+        /// <summary>
+        /// btnLoadCSV_Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLoadCSV_Click(object sender, EventArgs e)
         {
             openFileDialogCSV = new OpenFileDialog();
@@ -89,6 +73,9 @@ namespace Sample_App
             }
         }
 
+        /// <summary>
+        /// LoadCSVFile
+        /// </summary>
         private void LoadCSVFile()
         {
             try
@@ -110,6 +97,10 @@ namespace Sample_App
             }
         }
 
+        /// <summary>
+        /// LoadCSVToDataSet
+        /// </summary>
+        /// <param name="lCSV"></param>
         private void LoadCSVToDataSet(ref List<string> lCSV)
         {
             try
@@ -117,6 +108,9 @@ namespace Sample_App
                 char cDelimiter = ',';
                 object[] arData;
                 string[] sLine = lCSV[0].Split(cDelimiter);
+
+                m_dtCSVData.Clear();
+                m_dtCSVData.Columns.Clear();
 
                 for (int i = 0; i < sLine.Length; i++)
                 {
@@ -136,16 +130,33 @@ namespace Sample_App
             }
         }
 
+        /// <summary>
+        /// btnExit_Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnExit_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// btnUpload_Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnUpload_Click(object sender, EventArgs e)
-        { 
+        {
+            this.Init();
+            pictureBoxLoading.Visible = true;
             backgroundWorkerUploadCSV.RunWorkerAsync(ConvertToType(comboBoxType.SelectedItem.ToString()));
         }
 
+        /// <summary>
+        /// backgroundWorkerUploadCSV_DoWork
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void backgroundWorkerUploadCSV_DoWork(object sender, DoWorkEventArgs e)
         {
             ConstructorIO.AutoCompleListType arg = (ConstructorIO.AutoCompleListType)e.Argument;
@@ -155,14 +166,25 @@ namespace Sample_App
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.ToString());
+                
             }
         }
 
+        /// <summary>
+        /// backgroundWorkerUploadCSV_RunWorkerCompleted
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void backgroundWorkerUploadCSV_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            pictureBoxLoading.Visible = false;
         }
+
+        /// <summary>
+        /// ProcessUpload
+        /// </summary>
+        /// <param name="atType"></param>
         private void ProcessUpload(ConstructorIO.AutoCompleListType atType)
         {
             try
@@ -187,7 +209,7 @@ namespace Sample_App
 
                     object[] sItems = lDictionary.ToArray();
                     objDic.Add("items",sItems);
-                    bool bSuccess = constructorClient.BatchAdd(objDic, ConstructorIO.AutoCompleListType.SearchSuggestions);
+                    bool bSuccess = m_constructorClient.BatchAdd(objDic, ConstructorIO.AutoCompleListType.SearchSuggestions);
                 }
 
                 if (atType == ConstructorIO.AutoCompleListType.Product)
@@ -210,16 +232,21 @@ namespace Sample_App
 
                     object[] sItems = lDictionary.ToArray();
                     objDic.Add("items", sItems);
-                    bool bSuccess = constructorClient.BatchAdd(objDic, ConstructorIO.AutoCompleListType.Product);
+                    bool bSuccess = m_constructorClient.BatchAdd(objDic, ConstructorIO.AutoCompleListType.Product);
                 }
 
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.ToString());
             }
         }
- 
+
+        /// <summary>
+        /// ConvertToType
+        /// </summary>
+        /// <param name="sText"></param>
+        /// <returns>ConstructorIO.AutoCompleListType</returns>
         private ConstructorIO.AutoCompleListType ConvertToType(string sText)
         {
             ConstructorIO.AutoCompleListType objListType;
@@ -232,6 +259,11 @@ namespace Sample_App
             return objListType;
         }
 
+
+        /// <summary>
+        /// LoadData
+        /// </summary>
+        /// <param name="objDic"></param>
         private void LoadData(ref Dictionary<string, object> objDic)
         {
             if (dataGridViewCSVData.Rows[0].Cells["Score"].Value != null)
@@ -245,6 +277,28 @@ namespace Sample_App
 
             if (dataGridViewCSVData.Rows[0].Cells["Description"].Value != null)
                 objDic.Add("description", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Description"].Value));
+
+        }
+
+        private void btnVerify_Click(object sender, EventArgs e)
+        {
+            this.Init();
+            backgroundWorkerVerify.RunWorkerAsync();
+        }
+
+        private void backgroundWorkerVerify_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                if (m_constructorClient.Verify())
+                    MessageBox.Show("Successful authentication!");
+                else
+                    MessageBox.Show("Not successful authentication!");
+            }
+            catch (Exception ex)
+            {
+
+            }
 
         }
     }
