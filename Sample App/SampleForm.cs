@@ -20,21 +20,22 @@ namespace Sample_App
         private string m_sFileNameCSV;
         private DataTable m_dtCSVData;
         public ConstructorIO m_constructorClient;
+        public ConstructorIO.AutoCompleListType m_currentType;
 
         private class Item
         {
             public string Text;
-            public ConstructorIO.AutoCompleListType Value;
+            public ConstructorIO.AutoCompleListType CurrentType;
 
             public Item(string sName, ConstructorIO.AutoCompleListType acltType)
             {
                 Text = sName;
-                Value = acltType;
+                CurrentType = acltType;
             }
 
             public ConstructorIO.AutoCompleListType GetListType()
             {
-                return Value;
+                return CurrentType;
             }
         };
 
@@ -266,18 +267,21 @@ namespace Sample_App
         /// <param name="objDic"></param>
         private void LoadData(ref Dictionary<string, object> objDic)
         {
-            if (dataGridViewCSVData.Rows[0].Cells["Score"].Value != null)
-                objDic.Add("suggested_score", Convert.ToInt32(dataGridViewCSVData.Rows[0].Cells["Score"].Value));
+            if (this.m_currentType == ConstructorIO.AutoCompleListType.Product)
+            {
 
-            if (dataGridViewCSVData.Rows[0].Cells["Url"].Value != null)
-                objDic.Add("url", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Url"].Value));
+                if (dataGridViewCSVData.Rows[0].Cells["Score"].Value != null)
+                    objDic.Add("suggested_score", Convert.ToInt32(dataGridViewCSVData.Rows[0].Cells["Score"].Value));
 
-            if (dataGridViewCSVData.Rows[0].Cells["Image Url"].Value != null)
-                objDic.Add("image_url", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Url"].Value));
+                if (dataGridViewCSVData.Rows[0].Cells["Url"].Value != null)
+                    objDic.Add("url", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Url"].Value));
 
-            if (dataGridViewCSVData.Rows[0].Cells["Description"].Value != null)
-                objDic.Add("description", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Description"].Value));
+                if (dataGridViewCSVData.Rows[0].Cells["Image Url"].Value != null)
+                    objDic.Add("image_url", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Url"].Value));
 
+                if (dataGridViewCSVData.Rows[0].Cells["Description"].Value != null)
+                    objDic.Add("description", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Description"].Value));
+            }
         }
 
         private void btnVerify_Click(object sender, EventArgs e)
@@ -299,6 +303,16 @@ namespace Sample_App
             {
 
             }
+
+        }
+
+        private void comboBoxType_SelectedValueChanged(object sender, EventArgs e)
+        {
+            this.m_currentType = ConvertToType(comboBoxType.SelectedItem.ToString());
+        }
+
+        private void comboBoxType_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
     }

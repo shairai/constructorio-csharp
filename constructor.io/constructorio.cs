@@ -82,12 +82,12 @@ namespace ConstructorIOClient
         };
 
         /// <summary>
-        /// This is contracutor for class ConstructorIO. More details 
+        ///  Creates a constructor.io client. 
         /// </summary>
-        /// <param name="apiToken">your API token</param>
-        /// <param name="autocompleteKey">autocomplete key</param>
-        /// <param name="protocol">protocol</param>
-        /// <param name="host">host</param>
+        /// <param name="apiToken">apiToken API Token, gotten from your <a href="https://constructor.io/dashboard">Constructor.io Dashboard</a>, and kept secret.</param>
+        /// <param name="autocompleteKey">autocompleteKey Autocomplete key, used publically in your in-site javascript client.</param>
+        /// <param name="protocol">It is highly recommended that you use HTTPS.</param>
+        /// <param name="host">The host of the autocomplete service that you are using. It is recommended that you let this value be null, in which case the host defaults to the Constructor.io autocomplete servic at ac.cnstrc.com.</param>
         public ConstructorIO(string apiToken, string autocompleteKey, string protocol = "https", string host = "ac.cnstrc.com")
         {
             this.apiToken = apiToken;
@@ -97,10 +97,10 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// SerializeParams
+        /// Serializes url params in a rudimentary way, and you must write other helper methods to serialize other things.
         /// </summary>
-        /// <param name="paramDict"></param>
-        /// <returns></returns>
+        /// <param name="paramDict"> params HashMap of the parameters to encode.</param>
+        /// <returns> The encoded parameters, as a String.</returns>
         public static string SerializeParams(IDictionary<string, object> paramDict)
         {
             var list = new List<string>();
@@ -113,11 +113,12 @@ namespace ConstructorIOClient
 
 
         /// <summary>
-        /// MakeUrl
+        /// Makes a URL to issue the requests to. 
+        /// Note that the URL will automagically have the autocompleteKey embedded.
         /// </summary>
-        /// <param name="endpoint"></param>
-        /// <param name="keys"></param>
-        /// <returns></returns>
+        /// <param name="endpoint"> endpoint Endpoint of the autocomplete service.</param>
+        /// <param name="keys">keys IDictionary of the parameters you're encoding in the URL</param>
+        /// <returns> The created URL. Now you can use it to issue requests and things!</returns>
         public string MakeUrl(string endpoint, IDictionary<string, object> keys)
         {
             Dictionary<string, object> paramDict = new Dictionary<string, object>(keys);
@@ -134,10 +135,11 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// MakeUrl
+        /// Makes a URL to issue the requests to. 
+        /// Note that the URL will automagically have the autocompleteKey embedded.
         /// </summary>
-        /// <param name="endpoint"></param>
-        /// <returns></returns>
+        /// <param name="endpoint"> endpoint Endpoint of the autocomplete service.</param>
+        /// <returns> The created URL. Now you can use it to issue requests and things!</returns>
         public string MakeUrl(string endpoint)
         {
             // empty keys
@@ -291,10 +293,12 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// Query
+        /// Queries an autocomplete service. 
+        /// Note that if you're making an autocomplete service on a website, you should definitely use our javascript client instead of doing it server-side!
+        /// That's important. That will be a solid latency difference.
         /// </summary>
-        /// <param name="queryStr"></param>
-        /// <returns></returns>
+        /// <param name="queryStr">queryStr The string that you will be autocompleting.</param>
+        /// <returns>An ArrayList of suggestions for querying</returns>
         public List<string> Query(string queryStr)
         {
             List<string> res = new List<string>();
@@ -315,9 +319,9 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// Verify
+        ///  Verifies that an autocomplete service is working.
         /// </summary>
-        /// <returns>bool</returns>
+        /// <returns> true if working.</returns>
         public bool Verify()
         {
             string url = this.MakeUrl("v1/verify");
@@ -330,11 +334,11 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// Add
+        ///  Adds an item to your autocomplete.
         /// </summary>
-        /// <param name="itemName"></param>
-        /// <param name="autocompleteSection"></param>
-        /// <returns>bool</returns>
+        /// <param name="itemName">the item that you're adding.</param>
+        /// <param name="autocompleteSection"> the section of the autocomplete that you're adding the item to.</param>
+        /// <returns>true if working</returns>
         public bool Add(string itemName, string autocompleteSection)
         {
             return this.Add(itemName, autocompleteSection, new Dictionary<string, object>());
@@ -376,11 +380,11 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// Remove
+        /// Removes an item from your autocomplete.
         /// </summary>
-        /// <param name="itemName"></param>
-        /// <param name="autocompleteSection"></param>
-        /// <returns>bool</returns>
+        /// <param name="itemName"> the item that you're removing.</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're removing the item from.</param>
+        /// <returns> true if successfully removed</returns>
         public bool Remove(string itemName, string autocompleteSection)
         {
             string url = this.MakeUrl("v1/item");
@@ -391,25 +395,25 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// Modify
+        /// Modifies an item from your autocomplete.
         /// </summary>
-        /// <param name="itemName"></param>
-        /// <param name="newItemName"></param>
-        /// <param name="autocompleteSection"></param>
-        /// <returns>bool</returns>
+        /// <param name="itemName"> the item that you're modifying.</param>
+        /// <param name="newItemName">the new item name of the item you're modifying. If you don't wnat to change it, just put in the old itemName.</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're modifying the item from.</param>
+        /// <returns>true if successfully modified</returns>
         public bool Modify(string itemName, string newItemName, string autocompleteSection)
         {
             return this.Modify(itemName, newItemName, autocompleteSection, new Dictionary<string, object>());
         }
 
         /// <summary>
-        /// 
+        /// Modifies an item from your autocomplete.
         /// </summary>
-        /// <param name="itemName"></param>
-        /// <param name="newItemName"></param>
-        /// <param name="autocompleteSection"></param>
+        /// <param name="itemName">the item that you're modifying.</param>
+        /// <param name="newItemName">the new item name of the item you're modifying. If you don't wnat to change it, just put in the old itemName.</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're modifying the item from.</param>
         /// <param name="paramDict"></param>
-        /// <returns></returns>
+        /// <returns>true if successfully modified</returns>
         public bool Modify(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/item");
@@ -422,14 +426,14 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// Modify
+        /// Modifies an item from your autocomplete.
         /// </summary>
-        /// <param name="itemName"></param>
-        /// <param name="newItemName"></param>
-        /// <param name="autocompleteSection"></param>
+        /// <param name="itemName">the item that you're modifying.</param>
+        /// <param name="newItemName">the new item name of the item you're modifying. If you don't wnat to change it, just put in the old itemName.</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're modifying the item from.</param>
         /// <param name="paramDict"></param>
         /// <param name="keywords"></param>
-        /// <returns>bool</returns>
+        /// <returns>true if successfully modified</returns>
         public bool Modify(string itemName, string newItemName, string autocompleteSection, IDictionary<string, object> paramDict, List<string> keywords)
         {
             JArray arr = JArray.FromObject(keywords);
