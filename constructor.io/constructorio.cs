@@ -447,23 +447,25 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// TrackConversion
+        /// Tracks the fact that someone converted on your site.
+        ///  Can be for any definition of conversion, whether someone buys a product or signs up or does something important to your site.
         /// </summary>
-        /// <param name="term">the Term</param>
-        /// <param name="autocompleteSection">the section of the autocomplete that you're adding the item to</param>
-        /// <returns>true if working</returns>
+        /// <param name="term">the term that someone converted from</param>
+        /// <param name="autocompleteSection">the autocomplete section that they converted from</param>
+        /// <returns>true if successfully tracked</returns>
         public bool TrackConversion(string term, string autocompleteSection)
         {
             return this.TrackConversion(term, autocompleteSection, new Dictionary<string, object>());
         }
 
         /// <summary>
-        /// TrackConversion
+        /// Tracks the fact that someone converted on your site.
+        /// Can be for any definition of conversion, whether someone buys a product or signs up or does something important to your site.
         /// </summary>
-        /// <param name="term">the Term</param>
-        /// <param name="autocompleteSection">the section of the autocomplete that you're adding the item to</param>
+        /// <param name="term">the term that someone converted from</param>
+        /// <param name="autocompleteSection">the autocomplete section that they converted from</param>
         /// <param name="paramDict">IDictionary of optional parameters. Optional parameters are in the <a href="https://constructor.io/docs/#add-an-item">API documentation</a></param>
-        /// <returns>true if working</returns>
+        /// <returns>true if successfully tracked</returns>
         public bool TrackConversion(string term, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/conversion");
@@ -475,23 +477,23 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// TrackClickThrough
+        /// Tracks the fact that someone clicked through a search result on the site.
         /// </summary>
-        /// <param name="term">the Term</param>
-        /// <param name="autocompleteSection">the section of the autocomplete that you're adding the item to</param>
-        /// <returns>true if working</returns>
+        /// <param name="term">the term that someone clicked.</param>
+        /// <param name="autocompleteSection">the autocomplete section of the term that they clicked.</param>
+        /// <returns>true if successfully tracked.</returns>
         public bool TrackClickThrough(string term, string autocompleteSection)
         {
             return this.TrackClickThrough(term, autocompleteSection, new Dictionary<string, object>());
         }
 
         /// <summary>
-        /// TrackClickThrough
+        /// Tracks the fact that someone clicked through a search result on the site.
         /// </summary>
-        /// <param name="term"></param>
-        /// <param name="autocompleteSection">the section of the autocomplete that you're adding the item to</param>
+        /// <param name="term"> the term that someone clicked.</param>
+        /// <param name="autocompleteSection">the autocomplete section of the term that they clicked.</param>
         /// <param name="paramDict">IDictionary of optional parameters. Optional parameters are in the <a href="https://constructor.io/docs/#add-an-item">API documentation</a></param>
-        /// <returns>true if working</returns>
+        /// <returns>true if successfully tracked.</returns>
         public bool TrackClickThrough(string term, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/click_through");
@@ -503,20 +505,22 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        /// TrackSearch
+        /// Tracks the fact that someone searched on your site.
+        ///There's no autocompleteSection parameter because if you're searching, you aren't using an autocomplete.
         /// </summary>
-        /// <param name="term">the Term</param>
-        /// <returns>true if working</returns>
+        /// <param name="term">the term that someone searched.</param>
+        /// <returns>true if successfully tracked.</returns>
         public bool TrackSearch(string term)
         {
             return this.TrackSearch(term, new Dictionary<string, object>());
         }
 
         /// <summary>
-        /// TrackSearch
+        /// Tracks the fact that someone searched on your site.
+        /// There's no autocompleteSection parameter because if you're searching, you aren't using an autocomplete.
         /// </summary>
-        /// <param name="term">the Term</param>
-        /// <param name="paramDict">IDictionary of the parameters you're encoding in the URL</param>
+        /// <param name="term">the term that someone searched.</param>
+        /// <param name="paramDict">IDictionary of the optional parameters. Optional parameters are in the <a href="https://constructor.io/docs/#track-a-search">API documentation</a></param>
         /// <returns>true if working</returns>
         public bool TrackSearch(string term, IDictionary<string, object> paramDict)
         {
