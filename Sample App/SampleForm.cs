@@ -20,20 +20,20 @@ namespace Sample_App
         private string m_sFileNameCSV;
         private DataTable m_dtCSVData;
         public ConstructorIO m_constructorClient;
-        public ConstructorIO.AutoCompleListType m_currentType;
+        public ConstructorIO.AutoCompleteListType m_currentType;
 
         private class Item
         {
             public string Text;
-            public ConstructorIO.AutoCompleListType CurrentType;
+            public ConstructorIO.AutoCompleteListType CurrentType;
 
-            public Item(string sName, ConstructorIO.AutoCompleListType acltType)
+            public Item(string sName, ConstructorIO.AutoCompleteListType acltType)
             {
                 Text = sName;
                 CurrentType = acltType;
             }
 
-            public ConstructorIO.AutoCompleListType GetListType()
+            public ConstructorIO.AutoCompleteListType GetListType()
             {
                 return CurrentType;
             }
@@ -160,10 +160,10 @@ namespace Sample_App
         /// <param name="e"></param>
         private void backgroundWorkerUploadCSV_DoWork(object sender, DoWorkEventArgs e)
         {
-            ConstructorIO.AutoCompleListType arg = (ConstructorIO.AutoCompleListType)e.Argument;
+            ConstructorIO.AutoCompleteListType arg = (ConstructorIO.AutoCompleteListType)e.Argument;
             try
             {
-                this.ProcessUpload((ConstructorIO.AutoCompleListType)e.Argument);
+                this.ProcessUpload((ConstructorIO.AutoCompleteListType)e.Argument);
             }
             catch (Exception ex)
             {
@@ -186,11 +186,11 @@ namespace Sample_App
         /// ProcessUpload
         /// </summary>
         /// <param name="atType"></param>
-        private void ProcessUpload(ConstructorIO.AutoCompleListType atType)
+        private void ProcessUpload(ConstructorIO.AutoCompleteListType atType)
         {
             try
             {
-                if (atType == ConstructorIO.AutoCompleListType.SearchSuggestions)
+                if (atType == ConstructorIO.AutoCompleteListType.SearchSuggestions)
                 {
                     m_dtCSVData.EndLoadData();
 
@@ -210,10 +210,10 @@ namespace Sample_App
 
                     object[] sItems = lDictionary.ToArray();
                     objDic.Add("items",sItems);
-                    bool bSuccess = m_constructorClient.BatchAdd(objDic, ConstructorIO.AutoCompleListType.SearchSuggestions);
+                    bool bSuccess = m_constructorClient.AddBatch(objDic, StringEnum.GetStringValue(ConstructorIO.AutoCompleteListType.SearchSuggestions));
                 }
 
-                if (atType == ConstructorIO.AutoCompleListType.Product)
+                if (atType == ConstructorIO.AutoCompleteListType.Product)
                 {
                     m_dtCSVData.EndLoadData();
 
@@ -233,7 +233,7 @@ namespace Sample_App
 
                     object[] sItems = lDictionary.ToArray();
                     objDic.Add("items", sItems);
-                    bool bSuccess = m_constructorClient.BatchAdd(objDic, ConstructorIO.AutoCompleListType.Product);
+                    bool bSuccess = m_constructorClient.AddBatch(objDic, StringEnum.GetStringValue(ConstructorIO.AutoCompleteListType.Product));
                 }
 
             }
@@ -247,15 +247,15 @@ namespace Sample_App
         /// ConvertToType
         /// </summary>
         /// <param name="sText"></param>
-        /// <returns>ConstructorIO.AutoCompleListType</returns>
-        private ConstructorIO.AutoCompleListType ConvertToType(string sText)
+        /// <returns>ConstructorIO.AutoCompleteListType</returns>
+        private ConstructorIO.AutoCompleteListType ConvertToType(string sText)
         {
-            ConstructorIO.AutoCompleListType objListType;
+            ConstructorIO.AutoCompleteListType objListType;
 
             if (sText == "Products")
-                objListType = ConstructorIO.AutoCompleListType.Product;
+                objListType = ConstructorIO.AutoCompleteListType.Product;
             else
-                objListType = ConstructorIO.AutoCompleListType.SearchSuggestions;
+                objListType = ConstructorIO.AutoCompleteListType.SearchSuggestions;
 
             return objListType;
         }
@@ -267,7 +267,7 @@ namespace Sample_App
         /// <param name="objDic"></param>
         private void LoadData(ref Dictionary<string, object> objDic)
         {
-            if (this.m_currentType == ConstructorIO.AutoCompleListType.Product)
+            if (this.m_currentType == ConstructorIO.AutoCompleteListType.Product)
             {
 
                 if (dataGridViewCSVData.Rows[0].Cells["Score"].Value != null)
