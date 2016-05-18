@@ -62,9 +62,8 @@ namespace ConstructorIOClient
 
     /// <summary>
     /// Constructor.io Client
-    /// version 0.0.1
-    /// since Oct 19 2015
-    /// Go to Constructor.io for really profitable autocomplete-as-a-service.
+    /// Constructor.io provides a lightning-fast, typo-tolerant autocomplete service that ranks your users' queries by popularity 
+    /// to let them find what they're looking for as quickly as possible.
     /// </summary>
     public class ConstructorIO
     {
@@ -76,7 +75,7 @@ namespace ConstructorIOClient
         /// <summary>
         /// Built in types for sections names
         /// </summary>
-        public enum AutoCompleListType
+        public enum AutoCompleteListType
         {
             [StringValue("Products")]
             Product,
@@ -84,13 +83,14 @@ namespace ConstructorIOClient
             SearchSuggestions,
         };
 
+
         /// <summary>
         ///  Creates a constructor.io client. 
         /// </summary>
         /// <param name="apiToken"> API Token, gotten from your <a href="https://constructor.io/dashboard">Constructor.io Dashboard</a>, and kept secret.</param>
-        /// <param name="autocompleteKey"> Autocomplete key, used publically in your in-site javascript client.</param>
+        /// <param name="autocompleteKey"> Autocomplete key, also gotten from your <a href="https://constructor.io/dashboard">Constructor.io Dashboard</a> and used publicly in your in-site javascript client.</param>
         /// <param name="protocol">It is highly recommended that you use HTTPS.</param>
-        /// <param name="host">The host of the autocomplete service that you are using. It is recommended that you let this value be null, in which case the host defaults to the Constructor.io autocomplete servic at ac.cnstrc.com.</param>
+        /// <param name="host">The host of the autocomplete service that you are using. It is recommended that you let this value be null, in which case the host defaults to the Constructor.io autocomplete service at ac.cnstrc.com.</param>
         public ConstructorIO(string apiToken, string autocompleteKey, string protocol = "https", string host = "ac.cnstrc.com")
         {
             this.apiToken = apiToken;
@@ -121,7 +121,7 @@ namespace ConstructorIOClient
         /// </summary>
         /// <param name="endpoint"> endpoint Endpoint of the autocomplete service.</param>
         /// <param name="keys">IDictionary of the parameters you're encoding in the URL</param>
-        /// <returns> The created URL. Now you can use it to issue requests and things!</returns>
+        /// <returns> The created URL</returns>
         public string MakeUrl(string endpoint, IDictionary<string, object> keys)
         {
             Dictionary<string, object> paramDict = new Dictionary<string, object>(keys);
@@ -142,7 +142,7 @@ namespace ConstructorIOClient
         /// Note that the URL will automagically have the autocompleteKey embedded.
         /// </summary>
         /// <param name="endpoint"> Endpoint of the autocomplete service.</param>
-        /// <returns> The created URL. Now you can use it to issue requests and things!</returns>
+        /// <returns> The created URL</returns>
         public string MakeUrl(string endpoint)
         {
             // empty keys
@@ -297,8 +297,6 @@ namespace ConstructorIOClient
 
         /// <summary>
         /// Queries an autocomplete service. 
-        /// Note that if you're making an autocomplete service on a website, you should definitely use our javascript client instead of doing it server-side!
-        /// That's important. That will be a solid latency difference.
         /// </summary>
         /// <param name="queryStr">queryStr The string that you will be autocompleting.</param>
         /// <returns>An ArrayList of suggestions for querying</returns>
@@ -351,9 +349,9 @@ namespace ConstructorIOClient
         /// Adds an item to your autocomplete.
         /// </summary>
         /// <param name="itemName">itemName the item that you're adding.</param>
-        /// <param name="autocompleteSection">autocompleteSection the section of the autocomplete that you're adding the item to.</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're adding the item to.</param>
         /// <param name="paramDict">Optional parameters are in the <a href="https://constructor.io/docs/#add-an-item">API documentation</a></param>
-        /// <returns> true if working</returns>
+        /// <returns> true on success</returns>
         public bool Add(string itemName, string autocompleteSection, IDictionary<string, object> paramDict)
         {
             string url = this.MakeUrl("v1/item");
@@ -372,12 +370,60 @@ namespace ConstructorIOClient
         /// <param name="autocompleteSection">the section of the autocomplete that you're adding the item to</param>
         /// <param name="paramDict">IDictionary of optional parameters. Optional parameters are in the <a href="https://constructor.io/docs/#add-an-item">API documentation</a></param>
         /// <param name="keywords">list of keywords</param>
-        /// <returns>true if working</returns>
+        /// <returns>true on success</returns>
         public bool Add(string itemName, string autocompleteSection, IDictionary<string, object> paramDict, List<string> keywords)
         {
             JArray arr = JArray.FromObject(keywords);
 
                 paramDict.Add("keywords", arr.ToString());
+
+            return this.Add(itemName, autocompleteSection, paramDict);
+        }
+
+        /// <summary>
+        ///  Adds or updates an item to your autocomplete.
+        /// </summary>
+        /// <param name="itemName">the item that you're adding/updating.</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're adding/updating the item to.</param>
+        /// <returns>true if working</returns>
+        public bool AddOrUpdate(string itemName, string autocompleteSection)
+        {
+            return this.AddOrUpdate(itemName, autocompleteSection, new Dictionary<string, object>());
+        }
+
+        /// <summary>
+        /// Adds or updates an item to your autocomplete.
+        /// </summary>
+        /// <param name="itemName">itemName the item that you're adding/updating.</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're adding/updating the item to.</param>
+        /// <param name="paramDict">Optional parameters are in the <a href="https://constructor.io/docs/#add-an-item">API documentation</a></param>
+        /// <returns> true on success</returns>
+        public bool AddOrUpdate(string itemName, string autocompleteSection, IDictionary<string, object> paramDict)
+        {
+            Dictionary<string, object> queryStringDict = new Dictionary<string, object>{
+                { "force", "1"}
+            };
+            string url = this.MakeUrl("v1/item", queryStringDict);
+
+            Dictionary<string, object> values = CreateItemParams(itemName, autocompleteSection, false, paramDict);
+            string response = this.MakePostReq(url, values);
+
+            return response == "";
+        }
+
+        /// <summary>
+        /// Adds an item to your autocomplete.
+        /// </summary>
+        /// <param name="itemName">itemName the item that you're adding.</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're adding the item to</param>
+        /// <param name="paramDict">IDictionary of optional parameters. Optional parameters are in the <a href="https://constructor.io/docs/#add-an-item">API documentation</a></param>
+        /// <param name="keywords">list of keywords</param>
+        /// <returns>true on success</returns>
+        public bool AddOrUpdate(string itemName, string autocompleteSection, IDictionary<string, object> paramDict, List<string> keywords)
+        {
+            JArray arr = JArray.FromObject(keywords);
+
+            paramDict.Add("keywords", arr.ToString());
 
             return this.Add(itemName, autocompleteSection, paramDict);
         }
@@ -533,17 +579,36 @@ namespace ConstructorIOClient
         }
 
         /// <summary>
-        ///Adds multiply items
+        ///Adds multiple items
         /// </summary>
         /// <param name="items">IDictionary of the parameters you're encoding in the URL</param>
         /// <param name="autocompleteSection">the section of the autocomplete that you're adding the item to.</param>
-        /// <returns>true if working</returns>
-        public bool BatchAdd(IDictionary<string, object> items, AutoCompleListType autocompleteSection)
+        /// <returns>true on success</returns>
+        public bool AddBatch(IDictionary<string, object> items, string autocompleteSection)
         {
             string url = this.MakeUrl("v1/batch_items");
 
-                Dictionary<string, object> values = CreateItemsParams(items, StringEnum.GetStringValue(autocompleteSection));
+                Dictionary<string, object> values = CreateItemsParams(items, autocompleteSection);
                 string response = this.MakePostReq(url, values);
+
+            return response == "";
+        }
+
+        /// <summary>
+        ///Adds or updates multiple items
+        /// </summary>
+        /// <param name="items">IDictionary of the parameters you're encoding in the URL</param>
+        /// <param name="autocompleteSection">the section of the autocomplete that you're adding/update the item to.</param>
+        /// <returns>true on success</returns>
+        public bool AddOrUpdateBatch(IDictionary<string, object> items, string autocompleteSection)
+        {
+            Dictionary<string, object> queryStringDict = new Dictionary<string, object>{
+                { "force", "1"}
+            };
+            string url = this.MakeUrl("v1/batch_items", queryStringDict);
+
+            Dictionary<string, object> values = CreateItemsParams(items, autocompleteSection);
+            string response = this.MakePostReq(url, values);
 
             return response == "";
         }
