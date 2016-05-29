@@ -19,21 +19,21 @@ namespace Sample_App
     {
         private string m_sFileNameCSV;
         private DataTable m_dtCSVData;
-        public ConstructorIO m_constructorClient;
-        public ConstructorIO.AutoCompleteListType m_currentType;
+        public ConstructorIOClient.ConstructorIO m_constructorClient;
+        public ConstructorIOClient.ConstructorIO.AutoCompleteListType m_currentType;
 
         private class Item
         {
             public string Text;
-            public ConstructorIO.AutoCompleteListType CurrentType;
+            public ConstructorIOClient.ConstructorIO.AutoCompleteListType CurrentType;
 
-            public Item(string sName, ConstructorIO.AutoCompleteListType acltType)
+            public Item(string sName, ConstructorIOClient.ConstructorIO.AutoCompleteListType acltType)
             {
                 Text = sName;
                 CurrentType = acltType;
             }
 
-            public ConstructorIO.AutoCompleteListType GetListType()
+            public ConstructorIOClient.ConstructorIO.AutoCompleteListType GetListType()
             {
                 return CurrentType;
             }
@@ -47,6 +47,12 @@ namespace Sample_App
             m_dtCSVData = new DataTable();
 
             InitializeComponent();
+
+
+
+            ConstructorIOClient.ConstructorIO c = new ConstructorIOClient.ConstructorIO("", "");
+            bool valid = c.Verify();
+            c.Add("a", "b");
         }
 
         /// <summary>
@@ -54,7 +60,7 @@ namespace Sample_App
         /// </summary>
         private void Init()
         {
-            m_constructorClient  = new ConstructorIO(txtAPIToken.Text, txtKey.Text);
+            m_constructorClient = new ConstructorIOClient.ConstructorIO(txtAPIToken.Text, txtKey.Text);
         }
 
         /// <summary>
@@ -160,10 +166,10 @@ namespace Sample_App
         /// <param name="e"></param>
         private void backgroundWorkerUploadCSV_DoWork(object sender, DoWorkEventArgs e)
         {
-            ConstructorIO.AutoCompleteListType arg = (ConstructorIO.AutoCompleteListType)e.Argument;
+            ConstructorIOClient.ConstructorIO.AutoCompleteListType arg = (ConstructorIOClient.ConstructorIO.AutoCompleteListType)e.Argument;
             try
             {
-                this.ProcessUpload((ConstructorIO.AutoCompleteListType)e.Argument);
+                this.ProcessUpload((ConstructorIOClient.ConstructorIO.AutoCompleteListType)e.Argument);
             }
             catch (Exception ex)
             {
@@ -186,11 +192,11 @@ namespace Sample_App
         /// ProcessUpload
         /// </summary>
         /// <param name="atType"></param>
-        private void ProcessUpload(ConstructorIO.AutoCompleteListType atType)
+        private void ProcessUpload(ConstructorIOClient.ConstructorIO.AutoCompleteListType atType)
         {
             try
             {
-                if (atType == ConstructorIO.AutoCompleteListType.SearchSuggestions)
+                if (atType == ConstructorIOClient.ConstructorIO.AutoCompleteListType.SearchSuggestions)
                 {
                     m_dtCSVData.EndLoadData();
 
@@ -203,37 +209,37 @@ namespace Sample_App
                     {
                         if (null != dataGridViewCSVData.Rows[i].Cells[0].Value)
                         {
-                            Dictionary<string, object> value = ConstructorIO.CreateItemParams(dataGridViewCSVData.Rows[i].Cells[0].Value.ToString(), "Search Suggestions", false, objParams);
-                            lDictionary.Add(value);
-                        }
-                    }
-
-                    object[] sItems = lDictionary.ToArray();
-                    objDic.Add("items",sItems);
-                    bool bSuccess = m_constructorClient.AddBatch(objDic, StringEnum.GetStringValue(ConstructorIO.AutoCompleteListType.SearchSuggestions));
-                }
-
-                if (atType == ConstructorIO.AutoCompleteListType.Product)
-                {
-                    m_dtCSVData.EndLoadData();
-
-                    List<object> lDictionary = new List<object>();
-                    Dictionary<string, object> objDic = new Dictionary<string, object>();
-                    Dictionary<string, object> objParams = new Dictionary<string, object>();
-
-                    this.LoadData(ref objParams);
-                    for (int i = 0; i < dataGridViewCSVData.Rows.Count; i++)
-                    {
-                        if (null != dataGridViewCSVData.Rows[i].Cells[0].Value)
-                        {
-                            Dictionary<string, object> value = ConstructorIO.CreateItemParams(dataGridViewCSVData.Rows[i].Cells[0].Value.ToString(), "Products", false, objParams);
+                            Dictionary<string, object> value = ConstructorIOClient.ConstructorIO.CreateItemParams(dataGridViewCSVData.Rows[i].Cells[0].Value.ToString(), "Search Suggestions", false, objParams);
                             lDictionary.Add(value);
                         }
                     }
 
                     object[] sItems = lDictionary.ToArray();
                     objDic.Add("items", sItems);
-                    bool bSuccess = m_constructorClient.AddBatch(objDic, StringEnum.GetStringValue(ConstructorIO.AutoCompleteListType.Product));
+                    bool bSuccess = m_constructorClient.AddBatch(objDic, StringEnum.GetStringValue(ConstructorIOClient.ConstructorIO.AutoCompleteListType.SearchSuggestions));
+                }
+
+                if (atType == ConstructorIOClient.ConstructorIO.AutoCompleteListType.Product)
+                {
+                    m_dtCSVData.EndLoadData();
+
+                    List<object> lDictionary = new List<object>();
+                    Dictionary<string, object> objDic = new Dictionary<string, object>();
+                    Dictionary<string, object> objParams = new Dictionary<string, object>();
+
+                    this.LoadData(ref objParams);
+                    for (int i = 0; i < dataGridViewCSVData.Rows.Count; i++)
+                    {
+                        if (null != dataGridViewCSVData.Rows[i].Cells[0].Value)
+                        {
+                            Dictionary<string, object> value = ConstructorIOClient.ConstructorIO.CreateItemParams(dataGridViewCSVData.Rows[i].Cells[0].Value.ToString(), "Products", false, objParams);
+                            lDictionary.Add(value);
+                        }
+                    }
+
+                    object[] sItems = lDictionary.ToArray();
+                    objDic.Add("items", sItems);
+                    bool bSuccess = m_constructorClient.AddBatch(objDic, StringEnum.GetStringValue(ConstructorIOClient.ConstructorIO.AutoCompleteListType.Product));
                 }
 
             }
@@ -248,14 +254,14 @@ namespace Sample_App
         /// </summary>
         /// <param name="sText"></param>
         /// <returns>ConstructorIO.AutoCompleteListType</returns>
-        private ConstructorIO.AutoCompleteListType ConvertToType(string sText)
+        private ConstructorIOClient.ConstructorIO.AutoCompleteListType ConvertToType(string sText)
         {
-            ConstructorIO.AutoCompleteListType objListType;
+            ConstructorIOClient.ConstructorIO.AutoCompleteListType objListType;
 
             if (sText == "Products")
-                objListType = ConstructorIO.AutoCompleteListType.Product;
+                objListType = ConstructorIOClient.ConstructorIO.AutoCompleteListType.Product;
             else
-                objListType = ConstructorIO.AutoCompleteListType.SearchSuggestions;
+                objListType = ConstructorIOClient.ConstructorIO.AutoCompleteListType.SearchSuggestions;
 
             return objListType;
         }
@@ -267,7 +273,7 @@ namespace Sample_App
         /// <param name="objDic"></param>
         private void LoadData(ref Dictionary<string, object> objDic)
         {
-            if (this.m_currentType == ConstructorIO.AutoCompleteListType.Product)
+            if (this.m_currentType == ConstructorIOClient.ConstructorIO.AutoCompleteListType.Product)
             {
 
                 if (dataGridViewCSVData.Rows[0].Cells["Score"].Value != null)
