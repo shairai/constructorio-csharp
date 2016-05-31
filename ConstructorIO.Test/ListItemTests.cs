@@ -8,15 +8,11 @@ namespace ConstructorIO.Test
     [TestClass]
     public class ListItemTests
     {
-        public ConstructorIOAPI MakeAPI()
-        {
-            return new ConstructorIOAPI("UuXqlIafeKvwop6DaRwP", "5tHZR5xflF6bNLgvpa60");
-        }
 
         [TestMethod]
         public void TestVerify()
         {
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
 
             Assert.IsTrue(api.Verify());
         }
@@ -24,7 +20,7 @@ namespace ConstructorIO.Test
         [TestMethod]
         public void TestAddRemove()
         {
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
 
             ListItem testItem = new ListItem("AddRemove Test Item", ListItemAutocompleteType.SearchSuggestions);
 
@@ -36,7 +32,7 @@ namespace ConstructorIO.Test
         [TestMethod]
         public void TestModify()
         {
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
 
             ListItem testItem = new ListItem("Modify Test Item", ListItemAutocompleteType.Products)
             {
@@ -57,7 +53,7 @@ namespace ConstructorIO.Test
         [TestMethod]
         public void TestBatchAddIndividualRemove()
         {
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
 
             List<ListItem> batchTestSet = new List<ListItem>();
 
@@ -78,7 +74,7 @@ namespace ConstructorIO.Test
         [TestMethod]
         public void TestBatchAddBatchRemove()
         {
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
 
             List<ListItem> batchTestSet = new List<ListItem>();
 
@@ -95,7 +91,7 @@ namespace ConstructorIO.Test
         [TestMethod]
         public void TestIndividualAddBatchRemove()
         {
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
 
             List<ListItem> batchTestSet = new List<ListItem>();
 

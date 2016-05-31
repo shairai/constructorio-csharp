@@ -6,16 +6,11 @@ namespace ConstructorIO.Test
     [TestClass]
     public class TrackingTests
     {
-        public ConstructorIOAPI MakeAPI()
-        {
-            //TODO: Switch to environment variables
-            return new ConstructorIOAPI("UuXqlIafeKvwop6DaRwP", "5tHZR5xflF6bNLgvpa60");
-        }
 
         [TestMethod]
         public void TestTrackSearch()
         {
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
             Assert.IsTrue(api.Tracker.TrackSearch("Test"), "Track Search");
         }
 
@@ -24,7 +19,7 @@ namespace ConstructorIO.Test
         {
             var item = new ListItem("Test Conversion", ListItemAutocompleteType.SearchSuggestions);
 
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
             Assert.IsTrue(api.Tracker.TrackConversion(item), "Track Conversion");
         }
 
@@ -33,7 +28,7 @@ namespace ConstructorIO.Test
         {
             var item = new ListItem("Test Click Through", ListItemAutocompleteType.SearchSuggestions);
 
-            var api = MakeAPI();
+            var api = TestCommon.MakeAPI();
             Assert.IsTrue(api.Tracker.TrackClickThrough(item), "Track Click Through");
         }
     }
