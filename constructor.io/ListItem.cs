@@ -48,8 +48,8 @@ namespace ConstructorIO
         {
             HashArgs hash = new HashArgs();
 
-            hash.Add("item_name", _name);
-            hash.Add("autocomplete_section", _autocompleteSection);
+            if (_name != null) hash.Add("item_name", _name);
+            if (_autocompleteSection != null) hash.Add("autocomplete_section", _autocompleteSection);
 
             if (_autocompleteSection != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
                 if (_privateID != null) hash.Add("id", _privateID);
