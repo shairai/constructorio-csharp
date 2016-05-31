@@ -7,6 +7,8 @@ using System.Text;
 
 namespace ConstructorIO
 {
+    using HashArgs = Dictionary<string, object>;
+
     public class Util
     {
         /// <summary>
@@ -22,6 +24,12 @@ namespace ConstructorIO
                 list.Add(System.Uri.EscapeDataString(item.Key) + "=" + System.Uri.EscapeDataString((string)item.Value));
             }
             return string.Join("&", list);
+        }
+
+        public static void Merge(HashArgs from, HashArgs into)
+        {
+            foreach(var kvp in from)
+                into[kvp.Key] = kvp.Value;
         }
     }
 

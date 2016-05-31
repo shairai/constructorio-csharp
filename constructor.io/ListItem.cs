@@ -46,27 +46,26 @@ namespace ConstructorIO
 
         public HashArgs GetAsHash(bool forRemove = false)
         {
-            HashArgs hash = new HashArgs();
+            HashArgs outputHash = new HashArgs();
 
-            if (_name != null) hash.Add("item_name", _name);
-            if (_autocompleteSection != null) hash.Add("autocomplete_section", _autocompleteSection);
+            if (_name != null) outputHash.Add("item_name", _name);
+            if (_autocompleteSection != null) outputHash.Add("autocomplete_section", _autocompleteSection);
 
             if (_autocompleteSection != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
-                if (_privateID != null) hash.Add("id", _privateID);
+                if (_privateID != null) outputHash.Add("id", _privateID);
 
             if (!forRemove)
             {
-                if (_url != null) hash.Add("url", _url);
-                if (_imageUrl != null) hash.Add("image_url", _imageUrl);
-                if (_description != null) hash.Add("description", _description);
-                if (_keywords != null && _keywords.Count != 0) hash.Add("keywords", _keywords.ToArray());
-
+                if (_url != null) outputHash.Add("url", _url);
+                if (_imageUrl != null) outputHash.Add("image_url", _imageUrl);
+                if (_description != null) outputHash.Add("description", _description);
+                if (_keywords != null && _keywords.Count != 0) outputHash.Add("keywords", _keywords.ToArray());
+                
                 if (_extraArgs != null && _extraArgs.Count != 0)
-                    foreach (var arg in _extraArgs)
-                        hash.Add(arg.Key, arg.Value);
+                    Util.Merge(_extraArgs, outputHash);
             }
 
-            return hash;
+            return outputHash;
         }
 
         public void AddKeyword(string Keyword)

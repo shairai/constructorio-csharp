@@ -22,7 +22,13 @@ namespace ConstructorIO.Test
         {
             var api = TestCommon.MakeAPI();
 
-            ListItem testItem = new ListItem("AddRemove Test Item", ListItemAutocompleteType.SearchSuggestions);
+            ListItem testItem = new ListItem("AddRemove Test Item", ListItemAutocompleteType.Products)
+            {
+                PrivateID = "AddRemoveTestItem",
+                Url = "http://test.com",
+                Description = "ExampleItem",
+                ImageUrl = "http://test.com/test.jpg"
+            };
 
             Assert.IsTrue(api.Add(testItem), "Add Item");
             Task.Delay(500).Wait();
