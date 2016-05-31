@@ -15,6 +15,7 @@ namespace ConstructorIO
         private string _imageUrl;
         private string _description;
         private string _privateID;
+
         private List<string> _keywords;
         private HashArgs _extraArgs;
 
@@ -25,11 +26,20 @@ namespace ConstructorIO
         }
 
         public ListItem(string Name, string Category)
+            :this()
         {
-            if (Category == null) throw new ArgumentNullException("Category cannot be null");
-
             _name = Name;
             _category = Category;
+        }
+
+        public ListItem(string PrivateID)
+            :this()
+        {
+            _privateID = PrivateID;
+        }
+
+        public ListItem()
+        {
             _keywords = new List<string>();
             _extraArgs = new HashArgs();
         }
@@ -42,9 +52,7 @@ namespace ConstructorIO
             hash.Add("autocomplete_section", _category);
 
             if (_category != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
-            {
-                hash.Add("id", _privateID ?? "");
-            }
+                if (_privateID != null) hash.Add("id", _privateID);
 
             if (!forRemove)
             {
