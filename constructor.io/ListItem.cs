@@ -10,7 +10,7 @@ namespace ConstructorIO
     public class ListItem
     {
         private string _name;
-        private string _category;
+        private string _autocompleteSection;
         private string _url;
         private string _imageUrl;
         private string _description;
@@ -19,17 +19,17 @@ namespace ConstructorIO
         private List<string> _keywords;
         private HashArgs _extraArgs;
 
-        public ListItem(string Name, ListItemAutocompleteType Category)
-            :this(Name, StringEnum.GetStringValue(Category))
+        public ListItem(string Name, ListItemAutocompleteType AutocompleteSection)
+            :this(Name, StringEnum.GetStringValue(AutocompleteSection))
         {
             
         }
 
-        public ListItem(string Name, string Category)
+        public ListItem(string Name, string AutocompleteSection)
             :this()
         {
             _name = Name;
-            _category = Category;
+            _autocompleteSection = AutocompleteSection;
         }
 
         public ListItem(string PrivateID)
@@ -49,9 +49,9 @@ namespace ConstructorIO
             HashArgs hash = new HashArgs();
 
             hash.Add("item_name", _name);
-            hash.Add("autocomplete_section", _category);
+            hash.Add("autocomplete_section", _autocompleteSection);
 
-            if (_category != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
+            if (_autocompleteSection != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
                 if (_privateID != null) hash.Add("id", _privateID);
 
             if (!forRemove)
@@ -80,10 +80,10 @@ namespace ConstructorIO
             set { _name = value; }
         }
 
-        public string Category
+        public string AutocompleteSection
         {
-            get { return _category; }
-            set { _category = value; }
+            get { return _autocompleteSection; }
+            set { _autocompleteSection = value; }
         }
 
         public string Url

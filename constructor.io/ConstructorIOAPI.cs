@@ -84,7 +84,7 @@ namespace ConstructorIO
             var removeRequest = new ConstructorIORequest(APIRequestType.V1_Item, "DELETE");
 
             removeRequest.RequestBody["item_name"] = ItemToRemove.Name;
-            removeRequest.RequestBody["autocomplete_section"] = ItemToRemove.Category;
+            removeRequest.RequestBody["autocomplete_section"] = ItemToRemove.AutocompleteSection;
             removeRequest.RequestBody["id"] = ItemToRemove.PrivateID ?? "";
 
             var removeResponse = await Requestor.MakeRequest(removeRequest);

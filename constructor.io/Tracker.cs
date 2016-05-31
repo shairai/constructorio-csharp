@@ -24,7 +24,7 @@ namespace ConstructorIO
             if (ForItem != null)
             {
                 if (ForItem.Name != null) trackingRequest.RequestBody.Add("term", ForItem.Name);
-                if (ForItem.Category != null) trackingRequest.RequestBody.Add("autocomplete_section", ForItem.Category);
+                if (ForItem.AutocompleteSection != null) trackingRequest.RequestBody.Add("autocomplete_section", ForItem.AutocompleteSection);
             }
             
             return trackingRequest;
