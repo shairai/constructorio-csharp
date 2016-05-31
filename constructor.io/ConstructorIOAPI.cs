@@ -33,37 +33,51 @@ namespace ConstructorIO
             return false;
         }
 
-        public async Task<bool> AddAsync(ListItem Item, bool UpdateExisting = false)
+        public async Task<bool> AddAsync(ListItem Item)
         {
-            string requestMethod = UpdateExisting ? "PUT" : "POST";
+            string requestMethod = "POST";
             var addRequest = new ConstructorIORequest(APIRequestType.V1_Item, requestMethod);
 
             Item.GetAsHash().ToList().ForEach((kvp) => addRequest.RequestBody.Add(kvp.Key, kvp.Value));
-
-            if (UpdateExisting)
-                addRequest["force"] = "1";
 
             var addResponse = await Requestor.MakeRequest(addRequest);
             return addResponse.Item1;
         }
 
-        public async Task<bool> AddBatchAsync(IEnumerable<ListItem> Items,
-            ListItemAutocompleteType AutocompleteSection, bool UpdateExisting = false)
+        public async Task<bool> AddOrUpdateAsync(ListItem Item)
         {
-            return await AddBatchAsync(Items, StringEnum.GetStringValue(AutocompleteSection), UpdateExisting);
+            string requestMethod = "PUT";
+            var addRequest = new ConstructorIORequest(APIRequestType.V1_Item, requestMethod);
+
+            Item.GetAsHash().ToList().ForEach((kvp) => addRequest.RequestBody.Add(kvp.Key, kvp.Value));
+
+            addRequest["force"] = "1";
+
+            var addResponse = await Requestor.MakeRequest(addRequest);
+            return addResponse.Item1;
         }
 
-        public async Task<bool> AddBatchAsync(IEnumerable<ListItem> Items, string AutocompleteSection,
-            bool UpdateExisting = false)
+        public async Task<bool> AddBatchAsync(IEnumerable<ListItem> Items, string AutocompleteSection)
         {
-            string requestMethod = UpdateExisting ? "PUT" : "POST";
+            string requestMethod = "POST";
             var addBatchRequest = new ConstructorIORequest(APIRequestType.V1_BatchItems, requestMethod);
 
             addBatchRequest.RequestBody["items"] = Items.ToArray().Select(li => li.GetAsHash());
             addBatchRequest.RequestBody["autocomplete_section"] = AutocompleteSection;
 
-            if (UpdateExisting)
-                addBatchRequest["force"] = "1";
+            var addBatchResponse = await Requestor.MakeRequest(addBatchRequest);
+            return addBatchResponse.Item1;
+        }
+
+        public async Task<bool> AddOrUpdateBatchAsync(IEnumerable<ListItem> Items, string AutocompleteSection)
+        {
+            string requestMethod = "PUT";
+            var addBatchRequest = new ConstructorIORequest(APIRequestType.V1_BatchItems, requestMethod);
+
+            addBatchRequest.RequestBody["items"] = Items.ToArray().Select(li => li.GetAsHash());
+            addBatchRequest.RequestBody["autocomplete_section"] = AutocompleteSection;
+            
+            addBatchRequest["force"] = "1";
 
             var addBatchResponse = await Requestor.MakeRequest(addBatchRequest);
             return addBatchResponse.Item1;
@@ -111,21 +125,34 @@ namespace ConstructorIO
             return VerifyAsync().Result;
         }
 
-        public bool Add(ListItem Item, bool UpdateExisting = false)
+        public bool Add(ListItem Item)
         {
-            return AddAsync(Item, UpdateExisting).Result;
+            return AddAsync(Item).Result;
         }
 
-        public bool AddBatch(IEnumerable<ListItem> Items,
-            ListItemAutocompleteType AutocompleteSection, bool UpdateExisting = false)
+        public bool AddOrUpdate(ListItem Item)
         {
-            return AddBatchAsync(Items, AutocompleteSection, UpdateExisting).Result;
+            return AddOrUpdateAsync(Item).Result;
         }
 
-        public bool AddBatch(IEnumerable<ListItem> Items,
-            string AutocompleteSection, bool UpdateExisting = false)
+        public bool AddBatch(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
         {
-            return AddBatchAsync(Items, AutocompleteSection, UpdateExisting).Result;
+            return AddBatch(Items, StringEnum.GetStringValue(AutocompleteSection));
+        }
+
+        public bool AddBatch(IEnumerable<ListItem> Items, string AutocompleteSection)
+        {
+            return AddBatchAsync(Items, AutocompleteSection).Result;
+        }
+
+        public bool AddOrUpdateBatch(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
+        {
+            return AddOrUpdateBatch(Items, StringEnum.GetStringValue(AutocompleteSection));
+        }
+
+        public bool AddOrUpdateBatch(IEnumerable<ListItem> Items, string AutocompleteSection)
+        {
+            return AddOrUpdateBatchAsync(Items, AutocompleteSection).Result;
         }
 
         public bool Modify(ListItem ItemToModify)
