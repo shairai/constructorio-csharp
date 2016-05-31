@@ -69,6 +69,16 @@ namespace ConstructorIO
             return addBatchResponse.Item1;
         }
 
+        public async Task<bool> ModifyAsync(ListItem ItemToUpdate)
+        {
+            var modifyRequest = new ConstructorIORequest(APIRequestType.V1_Item, "PUT");
+
+            ItemToUpdate.GetAsHash().ToList().ForEach(kvp => modifyRequest.RequestBody[kvp.Key] = kvp.Value);
+
+            var modifyResponse = await Requestor.MakeRequest(modifyRequest);
+            return modifyResponse.Item1;
+        }
+
         public async Task<bool> RemoveAsync(ListItem ItemToRemove)
         {
             var removeRequest = new ConstructorIORequest(APIRequestType.V1_Item, "DELETE");
@@ -116,6 +126,11 @@ namespace ConstructorIO
             string AutocompleteSection, bool UpdateExisting = false)
         {
             return AddBatchAsync(Items, AutocompleteSection, UpdateExisting).Result;
+        }
+
+        public bool Modify(ListItem ItemToModify)
+        {
+            return ModifyAsync(ItemToModify).Result;
         }
 
         public bool Remove(ListItem Item)

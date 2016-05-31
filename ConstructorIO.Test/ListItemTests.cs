@@ -34,6 +34,27 @@ namespace ConstructorIO.Test
         }
 
         [TestMethod]
+        public void TestModify()
+        {
+            var api = MakeAPI();
+
+            ListItem testItem = new ListItem("Modify Test Item", ListItemAutocompleteType.Products)
+            {
+                Url = "http://test.com",
+                PrivateID = "12345"
+            };
+
+            Assert.IsTrue(api.Add(testItem), "Add Item");
+            Task.Delay(500).Wait();
+
+            testItem.Description = "Extra details";
+
+            Assert.IsTrue(api.Modify(testItem), "Modify Existing Item");
+            Task.Delay(500).Wait();
+            Assert.IsTrue(api.Remove(testItem), "Remove Item");
+        }
+
+        [TestMethod]
         public void TestBatchAddIndividualRemove()
         {
             var api = MakeAPI();

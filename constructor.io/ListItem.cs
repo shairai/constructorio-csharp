@@ -40,6 +40,7 @@ namespace ConstructorIO
 
             hash.Add("item_name", _name);
             hash.Add("autocomplete_section", _category);
+
             if (_category != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
             {
                 hash.Add("id", _privateID ?? "");
@@ -68,13 +69,13 @@ namespace ConstructorIO
         public string Name
         {
             get { return _name; }
-            private set { _name = value; }
+            set { _name = value; }
         }
 
         public string Category
         {
             get { return _category; }
-            private set { _category = value; }
+            set { _category = value; }
         }
 
         public string Url
