@@ -8,6 +8,7 @@ namespace ConstructorIO.Test
     [TestClass]
     public class ListItemTests
     {
+        static int TestDelay = 500;
 
         [TestMethod]
         public void TestVerify()
@@ -31,8 +32,9 @@ namespace ConstructorIO.Test
             };
 
             Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
-            Task.Delay(500).Wait();
+            Task.Delay(TestDelay).Wait();
             Assert.IsTrue(api.Remove(testItem), "Remove Item");
+            Task.Delay(TestDelay).Wait();
         }
 
         [TestMethod]
@@ -48,13 +50,14 @@ namespace ConstructorIO.Test
             };
 
             Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
-            Task.Delay(500).Wait();
+            Task.Delay(TestDelay).Wait();
 
             testItem.Description = "Extra details";
 
             Assert.IsTrue(api.Modify(testItem), "Modify Existing Item");
-            Task.Delay(500).Wait();
+            Task.Delay(TestDelay).Wait();
             Assert.IsTrue(api.Remove(testItem), "Remove Item");
+            Task.Delay(TestDelay).Wait();
         }
 
         [TestMethod]
@@ -70,13 +73,14 @@ namespace ConstructorIO.Test
             };
 
             Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
-            Task.Delay(500).Wait();
+            Task.Delay(TestDelay).Wait();
 
             testItem.Name = "Modify Test Item Rename";
 
             Assert.IsTrue(api.Modify(testItem), "Modify Existing Item");
-            Task.Delay(500).Wait();
+            Task.Delay(TestDelay).Wait();
             Assert.IsTrue(api.Remove(testItem), "Remove Item");
+            Task.Delay(TestDelay).Wait();
         }
 
         [TestMethod]
@@ -93,13 +97,74 @@ namespace ConstructorIO.Test
             };
 
             Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
-            Task.Delay(500).Wait();
+            Task.Delay(TestDelay).Wait();
 
             testItem.Name = "ModifyTestItemNewName";
 
             Assert.IsTrue(api.Modify(testItem), "Modify Existing Item");
-            Task.Delay(500).Wait();
+            Task.Delay(TestDelay).Wait();
             Assert.IsTrue(api.Remove(testItem), "Remove Item");
+            Task.Delay(TestDelay).Wait();
+        }
+
+        [TestMethod]
+        public void TestBatchRemoveByID()
+        {
+            var api = TestCommon.MakeAPI();
+
+            List<ListItem> batchTestSet = new List<ListItem>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                batchTestSet.Add(new ListItem("BatchRemoveNum" + i)
+                {
+                    Name = "BatchItemNum" + i,
+                    Description = "Test Item",
+                    ImageUrl = "http://test.com/test.jpg",
+                    Url = "http://test.com"
+                });
+            }
+
+            Assert.IsTrue(api.AddOrUpdateBatch(batchTestSet, ListItemAutocompleteType.Products));
+            Task.Delay(TestDelay).Wait();
+
+            List<ListItem> removeSet = new List<ListItem>();
+
+            for(int i=0;i<5;i++)
+                removeSet.Add(new ListItem("BatchRemoveNum" + i));
+
+            Assert.IsTrue(api.RemoveBatch(removeSet, ListItemAutocompleteType.Products));
+            Task.Delay(TestDelay).Wait();
+        }
+
+        [TestMethod]
+        public void TestIndividualRemoveByID()
+        {
+            var api = TestCommon.MakeAPI();
+
+            List<ListItem> batchTestSet = new List<ListItem>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                batchTestSet.Add(new ListItem("BatchRemoveNum" + i)
+                {
+                    Name = "BatchItemNum" + i,
+                    Description = "Test Item",
+                    ImageUrl = "http://test.com/test.jpg",
+                    Url = "http://test.com"
+                });
+            }
+
+            Assert.IsTrue(api.AddOrUpdateBatch(batchTestSet, ListItemAutocompleteType.Products));
+            Task.Delay(TestDelay).Wait();
+
+            List<ListItem> removeSet = new List<ListItem>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.IsTrue(api.Remove(new ListItem("BatchRemoveNum" + i) { AutocompleteSection = "Products" }));
+                Task.Delay(TestDelay).Wait();
+            }
         }
 
         [TestMethod]
@@ -119,7 +184,7 @@ namespace ConstructorIO.Test
             foreach (var listItem in batchTestSet)
             {
                 Assert.IsTrue(api.Remove(listItem), "Remove Item");
-                Task.Delay(500).Wait();
+                Task.Delay(TestDelay).Wait();
             }
         }
 
@@ -134,10 +199,10 @@ namespace ConstructorIO.Test
                 batchTestSet.Add(new ListItem("Batch Add Batch Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
 
             Assert.IsTrue(api.AddOrUpdateBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions));
-
-            Task.Delay(500).Wait();
+            Task.Delay(TestDelay).Wait();
 
             Assert.IsTrue(api.RemoveBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions), "Batch Remove");
+            Task.Delay(TestDelay).Wait();
         }
 
         [TestMethod]
@@ -153,12 +218,12 @@ namespace ConstructorIO.Test
             foreach (var listItem in batchTestSet)
             {
                 Assert.IsTrue(api.AddOrUpdate(listItem), "Remove Item");
-                Task.Delay(500).Wait();
+                Task.Delay(TestDelay).Wait();
             }
 
-            Task.Delay(500).Wait();
-
             Assert.IsTrue(api.RemoveBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions), "Batch Remove");
+
+            Task.Delay(TestDelay).Wait();
         }
     }
 }
