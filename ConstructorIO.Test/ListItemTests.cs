@@ -34,20 +34,20 @@ namespace ConstructorIO.Test
         }
 
         [TestMethod]
-        public void TestBulkAddIndividualRemove()
+        public void TestBatchAddIndividualRemove()
         {
             var api = MakeAPI();
 
-            List<ListItem> bulkTestSet = new List<ListItem>();
+            List<ListItem> batchTestSet = new List<ListItem>();
 
             for (int i = 0; i < 5; i++)
-                bulkTestSet.Add(new ListItem("Bulk Add Ind Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
+                batchTestSet.Add(new ListItem("Batch Add Ind Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
 
-            Assert.IsTrue(api.AddBulk(bulkTestSet, ListItemAutocompleteType.SearchSuggestions), "Bulk Add");
+            Assert.IsTrue(api.AddBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions), "Batch Add");
 
             Task.Delay(500).Wait();
 
-            foreach (var listItem in bulkTestSet)
+            foreach (var listItem in batchTestSet)
             {
                 Assert.IsTrue(api.Remove(listItem), "Remove Item");
                 Task.Delay(500).Wait();
@@ -55,33 +55,33 @@ namespace ConstructorIO.Test
         }
 
         [TestMethod]
-        public void TestBulkAddBulkRemove()
+        public void TestBatchAddBatchRemove()
         {
             var api = MakeAPI();
 
-            List<ListItem> bulkTestSet = new List<ListItem>();
+            List<ListItem> batchTestSet = new List<ListItem>();
 
             for (int i = 0; i < 5; i++)
-                bulkTestSet.Add(new ListItem("Bulk Add Bulk Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
+                batchTestSet.Add(new ListItem("Batch Add Batch Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
 
-            Assert.IsTrue(api.AddBulk(bulkTestSet, ListItemAutocompleteType.SearchSuggestions));
+            Assert.IsTrue(api.AddBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions));
 
             Task.Delay(500).Wait();
 
-            Assert.IsTrue(api.RemoveBulk(bulkTestSet, ListItemAutocompleteType.SearchSuggestions), "Bulk Remove");
+            Assert.IsTrue(api.RemoveBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions), "Batch Remove");
         }
 
         [TestMethod]
-        public void TestIndividualAddBulkRemove()
+        public void TestIndividualAddBatchRemove()
         {
             var api = MakeAPI();
 
-            List<ListItem> bulkTestSet = new List<ListItem>();
+            List<ListItem> batchTestSet = new List<ListItem>();
 
             for (int i = 0; i < 5; i++)
-                bulkTestSet.Add(new ListItem("Ind Add Bulk Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
+                batchTestSet.Add(new ListItem("Ind Add Batch Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
             
-            foreach (var listItem in bulkTestSet)
+            foreach (var listItem in batchTestSet)
             {
                 Assert.IsTrue(api.Add(listItem), "Remove Item");
                 Task.Delay(500).Wait();
@@ -89,7 +89,7 @@ namespace ConstructorIO.Test
 
             Task.Delay(500).Wait();
 
-            Assert.IsTrue(api.RemoveBulk(bulkTestSet, ListItemAutocompleteType.SearchSuggestions), "Bulk Remove");
+            Assert.IsTrue(api.RemoveBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions), "Batch Remove");
         }
     }
 }

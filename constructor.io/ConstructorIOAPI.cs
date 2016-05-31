@@ -47,26 +47,26 @@ namespace ConstructorIO
             return addResponse.Item1;
         }
 
-        public async Task<bool> AddBulkAsync(IEnumerable<ListItem> Items,
+        public async Task<bool> AddBatchAsync(IEnumerable<ListItem> Items,
             ListItemAutocompleteType AutocompleteSection, bool UpdateExisting = false)
         {
-            return await AddBulkAsync(Items, StringEnum.GetStringValue(AutocompleteSection), UpdateExisting);
+            return await AddBatchAsync(Items, StringEnum.GetStringValue(AutocompleteSection), UpdateExisting);
         }
 
-        public async Task<bool> AddBulkAsync(IEnumerable<ListItem> Items, string AutocompleteSection,
+        public async Task<bool> AddBatchAsync(IEnumerable<ListItem> Items, string AutocompleteSection,
             bool UpdateExisting = false)
         {
             string requestMethod = UpdateExisting ? "PUT" : "POST";
-            var addBulkRequest = new ConstructorIORequest(APIRequestType.V1_BatchItems, requestMethod);
+            var addBatchRequest = new ConstructorIORequest(APIRequestType.V1_BatchItems, requestMethod);
 
-            addBulkRequest.RequestBody["items"] = Items.ToArray().Select(li => li.GetAsHash());
-            addBulkRequest.RequestBody["autocomplete_section"] = AutocompleteSection;
+            addBatchRequest.RequestBody["items"] = Items.ToArray().Select(li => li.GetAsHash());
+            addBatchRequest.RequestBody["autocomplete_section"] = AutocompleteSection;
 
             if (UpdateExisting)
-                addBulkRequest["force"] = "1";
+                addBatchRequest["force"] = "1";
 
-            var addBulkResponse = await Requestor.MakeRequest(addBulkRequest);
-            return addBulkResponse.Item1;
+            var addBatchResponse = await Requestor.MakeRequest(addBatchRequest);
+            return addBatchResponse.Item1;
         }
 
         public async Task<bool> RemoveAsync(ListItem ItemToRemove)
@@ -81,15 +81,15 @@ namespace ConstructorIO
             return removeResponse.Item1;
         }
 
-        public async Task<bool> RemoveBulkAsync(IEnumerable<ListItem> ItemsToRemove, string AutocompleteSection)
+        public async Task<bool> RemoveBatchAsync(IEnumerable<ListItem> ItemsToRemove, string AutocompleteSection)
         {
-            var removeBulkRequest = new ConstructorIORequest(APIRequestType.V1_BatchItems, "DELETE");
+            var removeBatchRequest = new ConstructorIORequest(APIRequestType.V1_BatchItems, "DELETE");
 
-            removeBulkRequest.RequestBody["items"] = ItemsToRemove.ToArray().Select(item => item.GetAsHash(true));
-            removeBulkRequest.RequestBody["autocomplete_section"] = AutocompleteSection;
+            removeBatchRequest.RequestBody["items"] = ItemsToRemove.ToArray().Select(item => item.GetAsHash(true));
+            removeBatchRequest.RequestBody["autocomplete_section"] = AutocompleteSection;
 
-            var removeBulkResponse = await Requestor.MakeRequest(removeBulkRequest);
-            return removeBulkResponse.Item1;
+            var removeBatchResponse = await Requestor.MakeRequest(removeBatchRequest);
+            return removeBatchResponse.Item1;
         }
 
         #endregion
@@ -106,16 +106,16 @@ namespace ConstructorIO
             return AddAsync(Item, UpdateExisting).Result;
         }
 
-        public bool AddBulk(IEnumerable<ListItem> Items,
+        public bool AddBatch(IEnumerable<ListItem> Items,
             ListItemAutocompleteType AutocompleteSection, bool UpdateExisting = false)
         {
-            return AddBulkAsync(Items, AutocompleteSection, UpdateExisting).Result;
+            return AddBatchAsync(Items, AutocompleteSection, UpdateExisting).Result;
         }
 
-        public bool AddBulk(IEnumerable<ListItem> Items,
+        public bool AddBatch(IEnumerable<ListItem> Items,
             string AutocompleteSection, bool UpdateExisting = false)
         {
-            return AddBulkAsync(Items, AutocompleteSection, UpdateExisting).Result;
+            return AddBatchAsync(Items, AutocompleteSection, UpdateExisting).Result;
         }
 
         public bool Remove(ListItem Item)
@@ -123,14 +123,14 @@ namespace ConstructorIO
             return RemoveAsync(Item).Result;
         }
 
-        public bool RemoveBulk(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
+        public bool RemoveBatch(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
         {
-            return RemoveBulk(Items, StringEnum.GetStringValue(AutocompleteSection));
+            return RemoveBatch(Items, StringEnum.GetStringValue(AutocompleteSection));
         }
 
-        public bool RemoveBulk(IEnumerable<ListItem> Items, string AutocompleteSection)
+        public bool RemoveBatch(IEnumerable<ListItem> Items, string AutocompleteSection)
         {
-            return RemoveBulkAsync(Items, AutocompleteSection).Result;
+            return RemoveBatchAsync(Items, AutocompleteSection).Result;
         }
 
         #endregion

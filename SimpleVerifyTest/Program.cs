@@ -31,22 +31,22 @@ namespace SimpleVerifyTest
 
             Task.Delay(2000).Wait();
 
-            List<ListItem> bulkTestSet = new List<ListItem>();
+            List<ListItem> batchTestSet = new List<ListItem>();
 
             for (int i = 0; i < 5; i++)
-                bulkTestSet.Add(new ListItem("Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
+                batchTestSet.Add(new ListItem("Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
 
-            Console.WriteLine("Sending Bulk Add");
-            bool bulkAddResult = api.AddBulk(bulkTestSet, ListItemAutocompleteType.SearchSuggestions);
-            Console.WriteLine("Bulk Add Result: " + bulkAddResult);
+            Console.WriteLine("Sending Batch Add");
+            bool batchAddResult = api.AddBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions);
+            Console.WriteLine("Batch Add Result: " + batchAddResult);
 
             Task.Delay(5000).Wait();
 
-            foreach (var listItem in bulkTestSet)
+            foreach (var listItem in batchTestSet)
             {
-                Console.WriteLine("Removing Bulk Item: " + listItem.Name);
-                bool removeBulkResult = api.Remove(listItem);
-                Console.WriteLine("Remove result: " + removeBulkResult);
+                Console.WriteLine("Removing Batch Item: " + listItem.Name);
+                bool removeBatchResult = api.Remove(listItem);
+                Console.WriteLine("Remove result: " + removeBatchResult);
 
                 Task.Delay(1000).Wait();
             }
