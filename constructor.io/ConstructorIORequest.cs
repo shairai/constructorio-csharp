@@ -51,7 +51,7 @@ namespace ConstructorIO
             var tempParams = new HashArgs(_extraArgs); //Create a new instance
             //Don't want to have the API key floating around in each object
             tempParams["autocomplete_key"] = APIKey;
-
+            
             var uriBuilder = new UriBuilder(_uriScheme, _uriHost)
             {
                 Path = _apiPath,

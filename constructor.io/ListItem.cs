@@ -16,6 +16,8 @@ namespace ConstructorIO
         private string _description;
         private string _privateID;
 
+        private string _originalName;
+
         private List<string> _keywords;
         private HashArgs _extraArgs;
 
@@ -28,7 +30,7 @@ namespace ConstructorIO
         public ListItem(string Name, string AutocompleteSection)
             :this()
         {
-            _name = Name;
+            _originalName = _name = Name;
             _autocompleteSection = AutocompleteSection;
         }
 
@@ -44,26 +46,64 @@ namespace ConstructorIO
             _extraArgs = new HashArgs();
         }
 
-        public HashArgs GetAsHash(bool forRemove = false)
+        internal HashArgs GetAsHash()
         {
             HashArgs outputHash = new HashArgs();
 
-            if (_name != null) outputHash.Add("item_name", _name);
-            if (_autocompleteSection != null) outputHash.Add("autocomplete_section", _autocompleteSection);
+            if (_name != null) outputHash["item_name"] = _name;
+            if (_autocompleteSection != null) outputHash["autocomplete_section"] = _autocompleteSection;
 
             if (_autocompleteSection != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
-                if (_privateID != null) outputHash.Add("id", _privateID);
-
-            if (!forRemove)
-            {
-                if (_url != null) outputHash.Add("url", _url);
-                if (_imageUrl != null) outputHash.Add("image_url", _imageUrl);
-                if (_description != null) outputHash.Add("description", _description);
-                if (_keywords != null && _keywords.Count != 0) outputHash.Add("keywords", _keywords.ToArray());
+                if (_privateID != null) outputHash["id"] = _privateID;
+            
+            if (_url != null) outputHash["url"] = _url;
+            if (_imageUrl != null) outputHash["image_url"] = _imageUrl;
+            if (_description != null) outputHash["description"] = _description;
+            if (_keywords != null && _keywords.Count != 0) outputHash["keywords"] = _keywords.ToArray();
                 
-                if (_extraArgs != null && _extraArgs.Count != 0)
-                    Util.Merge(_extraArgs, outputHash);
+            if (_extraArgs != null && _extraArgs.Count != 0)
+                Util.Merge(_extraArgs, outputHash);
+
+            return outputHash;
+        }
+
+        internal HashArgs GetAsRemoveHash()
+        {
+            HashArgs outputHash = new HashArgs();
+
+            if (_name != null) outputHash["item_name"] = _name;
+            if (_autocompleteSection != null) outputHash["autocomplete_section"] = _autocompleteSection;
+
+            if (_autocompleteSection != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
+                if (_privateID != null) outputHash["id"] = _privateID;
+
+            return outputHash;
+        }
+
+        internal HashArgs GetAsModifyHash()
+        {
+            HashArgs outputHash = new HashArgs();
+
+            if(_privateID != null)
+            {
+                outputHash["id"] = _privateID;
+                if(_name != null) outputHash["new_item_name"] = _name;
             }
+            else
+            {
+                outputHash["item_name"] = _originalName;
+                outputHash["new_item_name"] = _name;
+            }
+            
+            if (_autocompleteSection != null) outputHash["autocomplete_section"] = _autocompleteSection;
+            
+            if (_url != null) outputHash["url"] = _url;
+            if (_imageUrl != null) outputHash["image_url"] = _imageUrl;
+            if (_description != null) outputHash["description"] = _description;
+            if (_keywords != null && _keywords.Count != 0) outputHash["keywords"] = _keywords.ToArray();
+
+            if (_extraArgs != null && _extraArgs.Count != 0)
+                Util.Merge(_extraArgs, outputHash);
 
             return outputHash;
         }

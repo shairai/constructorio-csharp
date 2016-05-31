@@ -30,26 +30,72 @@ namespace ConstructorIO.Test
                 ImageUrl = "http://test.com/test.jpg"
             };
 
-            Assert.IsTrue(api.Add(testItem), "Add Item");
+            Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
             Task.Delay(500).Wait();
             Assert.IsTrue(api.Remove(testItem), "Remove Item");
         }
 
         [TestMethod]
-        public void TestModify()
+        public void TestModifyByName()
         {
             var api = TestCommon.MakeAPI();
 
             ListItem testItem = new ListItem("Modify Test Item", ListItemAutocompleteType.Products)
             {
                 Url = "http://test.com",
-                PrivateID = "12345"
+                Description = "Example Item",
+                ImageUrl = "http://test.com/test.jpg"
             };
 
-            Assert.IsTrue(api.Add(testItem), "Add Item");
+            Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
             Task.Delay(500).Wait();
 
             testItem.Description = "Extra details";
+
+            Assert.IsTrue(api.Modify(testItem), "Modify Existing Item");
+            Task.Delay(500).Wait();
+            Assert.IsTrue(api.Remove(testItem), "Remove Item");
+        }
+
+        [TestMethod]
+        public void TestModifyChangeName()
+        {
+            var api = TestCommon.MakeAPI();
+
+            ListItem testItem = new ListItem("Modify Test Item", ListItemAutocompleteType.Products)
+            {
+                Url = "http://test.com",
+                Description = "Example Item",
+                ImageUrl = "http://test.com/test.jpg"
+            };
+
+            Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
+            Task.Delay(500).Wait();
+
+            testItem.Name = "Modify Test Item Rename";
+
+            Assert.IsTrue(api.Modify(testItem), "Modify Existing Item");
+            Task.Delay(500).Wait();
+            Assert.IsTrue(api.Remove(testItem), "Remove Item");
+        }
+
+        [TestMethod]
+        public void TestModifyByID()
+        {
+            var api = TestCommon.MakeAPI();
+
+            ListItem testItem = new ListItem("ModifyTestItem", ListItemAutocompleteType.Products)
+            {
+                PrivateID = "ModifyTestItemID",
+                Url = "http://test.com",
+                Description = "Example Item",
+                ImageUrl = "http://test.com/test.jpg"
+            };
+
+            Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
+            Task.Delay(500).Wait();
+
+            testItem.Name = "ModifyTestItemNewName";
 
             Assert.IsTrue(api.Modify(testItem), "Modify Existing Item");
             Task.Delay(500).Wait();
@@ -66,7 +112,7 @@ namespace ConstructorIO.Test
             for (int i = 0; i < 5; i++)
                 batchTestSet.Add(new ListItem("Batch Add Ind Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
 
-            Assert.IsTrue(api.AddBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions), "Batch Add");
+            Assert.IsTrue(api.AddOrUpdateBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions), "Batch Add");
 
             Task.Delay(500).Wait();
 
@@ -87,7 +133,7 @@ namespace ConstructorIO.Test
             for (int i = 0; i < 5; i++)
                 batchTestSet.Add(new ListItem("Batch Add Batch Remove Test Item " + i, ListItemAutocompleteType.SearchSuggestions));
 
-            Assert.IsTrue(api.AddBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions));
+            Assert.IsTrue(api.AddOrUpdateBatch(batchTestSet, ListItemAutocompleteType.SearchSuggestions));
 
             Task.Delay(500).Wait();
 
@@ -106,7 +152,7 @@ namespace ConstructorIO.Test
             
             foreach (var listItem in batchTestSet)
             {
-                Assert.IsTrue(api.Add(listItem), "Remove Item");
+                Assert.IsTrue(api.AddOrUpdate(listItem), "Remove Item");
                 Task.Delay(500).Wait();
             }
 

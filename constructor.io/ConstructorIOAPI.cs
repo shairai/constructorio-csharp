@@ -87,7 +87,7 @@ namespace ConstructorIO
         {
             var modifyRequest = new ConstructorIORequest(APIRequestType.V1_Item, "PUT");
 
-            ItemToUpdate.GetAsHash().ToList().ForEach(kvp => modifyRequest.RequestBody[kvp.Key] = kvp.Value);
+            Util.Merge(ItemToUpdate.GetAsModifyHash(), modifyRequest.RequestBody);
 
             var modifyResponse = await Requestor.MakeRequest(modifyRequest);
             return modifyResponse.Item1;
@@ -97,7 +97,7 @@ namespace ConstructorIO
         {
             var removeRequest = new ConstructorIORequest(APIRequestType.V1_Item, "DELETE");
 
-            Util.Merge(ItemToRemove.GetAsHash(true), removeRequest.RequestBody);
+            Util.Merge(ItemToRemove.GetAsRemoveHash(), removeRequest.RequestBody);
 
             var removeResponse = await Requestor.MakeRequest(removeRequest);
             return removeResponse.Item1;
@@ -107,7 +107,7 @@ namespace ConstructorIO
         {
             var removeBatchRequest = new ConstructorIORequest(APIRequestType.V1_BatchItems, "DELETE");
 
-            removeBatchRequest.RequestBody["items"] = ItemsToRemove.ToArray().Select(item => item.GetAsHash(true));
+            removeBatchRequest.RequestBody["items"] = ItemsToRemove.ToArray().Select(item => item.GetAsRemoveHash());
             removeBatchRequest.RequestBody["autocomplete_section"] = AutocompleteSection;
 
             var removeBatchResponse = await Requestor.MakeRequest(removeBatchRequest);
