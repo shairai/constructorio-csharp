@@ -48,7 +48,7 @@
     <Compile Include="ConstructorIORequest.cs" />
     <Compile Include="ListItem.cs" />
     <Compile Include="ListItemAutocompleteType.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Tracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WebRequestor.cs" />
