@@ -118,19 +118,22 @@ namespace ConstructorIO
 
         #region Non Async Implementations
 
+        //NOTE: the GetAwaiter().GetResult(); allows any thrown exceptions to not be encapsulated in
+        //an aggregateException which tasks will do by default.
+
         public bool Verify()
         {
-            return VerifyAsync().Result;
+            return VerifyAsync().GetAwaiter().GetResult();
         }
 
         public bool Add(ListItem Item)
         {
-            return AddAsync(Item).Result;
+            return AddAsync(Item).GetAwaiter().GetResult();
         }
 
         public bool AddOrUpdate(ListItem Item)
         {
-            return AddOrUpdateAsync(Item).Result;
+            return AddOrUpdateAsync(Item).GetAwaiter().GetResult();
         }
 
         public bool AddBatch(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
@@ -140,7 +143,7 @@ namespace ConstructorIO
 
         public bool AddBatch(IEnumerable<ListItem> Items, string AutocompleteSection)
         {
-            return AddBatchAsync(Items, AutocompleteSection).Result;
+            return AddBatchAsync(Items, AutocompleteSection).GetAwaiter().GetResult();
         }
 
         public bool AddOrUpdateBatch(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
@@ -150,17 +153,17 @@ namespace ConstructorIO
 
         public bool AddOrUpdateBatch(IEnumerable<ListItem> Items, string AutocompleteSection)
         {
-            return AddOrUpdateBatchAsync(Items, AutocompleteSection).Result;
+            return AddOrUpdateBatchAsync(Items, AutocompleteSection).GetAwaiter().GetResult();
         }
 
         public bool Modify(ListItem ItemToModify)
         {
-            return ModifyAsync(ItemToModify).Result;
+            return ModifyAsync(ItemToModify).GetAwaiter().GetResult();
         }
 
         public bool Remove(ListItem Item)
         {
-            return RemoveAsync(Item).Result;
+            return RemoveAsync(Item).GetAwaiter().GetResult();
         }
 
         public bool RemoveBatch(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
@@ -170,7 +173,7 @@ namespace ConstructorIO
 
         public bool RemoveBatch(IEnumerable<ListItem> Items, string AutocompleteSection)
         {
-            return RemoveBatchAsync(Items, AutocompleteSection).Result;
+            return RemoveBatchAsync(Items, AutocompleteSection).GetAwaiter().GetResult();
         }
 
         #endregion

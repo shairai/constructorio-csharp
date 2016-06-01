@@ -8,7 +8,7 @@ namespace ConstructorIO.Test
     [TestClass]
     public class ListItemTests
     {
-        static int TestDelay = 500;
+        static int TestDelay = 600;
 
         [TestMethod]
         public void TestVerify()
@@ -16,6 +16,18 @@ namespace ConstructorIO.Test
             var api = TestCommon.MakeAPI();
 
             Assert.IsTrue(api.Verify());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ConstructorIOException))]
+        public void TestCreateInvalid()
+        {
+            var api = TestCommon.MakeAPI();
+
+            ListItem testItem = new ListItem("AddInvalid Test Item");
+
+            Assert.IsTrue(api.AddOrUpdate(testItem), "Add Invalid Item");
+            Task.Delay(TestDelay).Wait();
         }
 
         [TestMethod]

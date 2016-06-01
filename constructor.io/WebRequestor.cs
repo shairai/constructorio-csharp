@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,7 +55,7 @@ namespace ConstructorIO
                                     .Replace("]\"", "]");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception("Error generating JSON body. See inner exception for details.", ex);
             }
@@ -84,11 +85,11 @@ namespace ConstructorIO
                 serverResponse = (HttpWebResponse)await request.GetResponseAsync();
                 validResponse = ResponseCheck(serverResponse);
             }
-            catch(WebException webException)
+            catch (WebException webException)
             {
                 errorRaised = true;
 
-                if(webException.Response as HttpWebResponse != null)
+                if (webException.Response as HttpWebResponse != null)
                 {
                     serverResponse = webException.Response as HttpWebResponse;
                 }
@@ -97,7 +98,7 @@ namespace ConstructorIO
                     throw new Exception("Error Downlaoding. See inner exception for details", webException);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception("Error Downlaoding. See inner exception for details", e);
             }
@@ -106,18 +107,32 @@ namespace ConstructorIO
             {
                 if (serverResponse != null)
                     using (Stream dataStream = serverResponse.GetResponseStream())
-                        using (StreamReader reader = new StreamReader(dataStream))
-                            _lastBody = responseText = await reader.ReadToEndAsync();
-
-                if(errorRaised)
-                {
-                    //TODO: Check body for well-formed error message
-                    throw new Exception("Error occured during request. Response:" + _lastBody);
-                }
+                    using (StreamReader reader = new StreamReader(dataStream))
+                        _lastBody = responseText = await reader.ReadToEndAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception("Error reading server response. See inner exception for details", ex);
+            }
+
+            if (responseText != null)
+            {
+                if (errorRaised)
+                {
+                    //Best way to check for valid jsontext is try ot 
+                    try
+                    {
+                        var jsonResponse = JObject.Parse(responseText);
+                        if (jsonResponse["message"] != null)
+                        {
+                            throw new ConstructorIOException(jsonResponse["message"].ToString());
+                        }
+                    }
+                    catch (JsonReaderException ex)
+                    {
+                        throw new Exception("Error occured during request. Response:" + _lastBody);
+                    }
+                }
             }
 
             return Tuple.Create(validResponse, responseText);
@@ -126,6 +141,14 @@ namespace ConstructorIO
         internal string GetLastBody()
         {
             return _lastBody;
+        }
+    }
+
+    public class ConstructorIOException : Exception
+    {
+        public ConstructorIOException(string ErrorMessage)
+            :base(ErrorMessage)
+        {
         }
     }
 }
