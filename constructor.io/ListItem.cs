@@ -14,7 +14,7 @@ namespace ConstructorIO
         private string _url;
         private string _imageUrl;
         private string _description;
-        private string _privateID;
+        private string _id;
 
         private string _originalName;
 
@@ -27,12 +27,12 @@ namespace ConstructorIO
 
         }
 
-        public ListItem(string Name = null, string AutocompleteSection = null, string PrivateID = null, string Description = null, string URL = null, string ImageURL = null)
+        public ListItem(string Name = null, string AutocompleteSection = null, string ID = null, string Description = null, string URL = null, string ImageURL = null)
             :this()
         {
             _originalName = _name = Name;
             _autocompleteSection = AutocompleteSection;
-            _privateID = PrivateID;
+            _id = ID;
             _description = Description;
             _url = URL;
             _imageUrl = ImageURL;
@@ -52,7 +52,7 @@ namespace ConstructorIO
             if (_autocompleteSection != null) outputHash["autocomplete_section"] = _autocompleteSection;
 
             if (_autocompleteSection != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
-                if (_privateID != null) outputHash["id"] = _privateID;
+                if (_id != null) outputHash["id"] = _id;
             
             if (_url != null) outputHash["url"] = _url;
             if (_imageUrl != null) outputHash["image_url"] = _imageUrl;
@@ -73,7 +73,7 @@ namespace ConstructorIO
             if (_autocompleteSection != null) outputHash["autocomplete_section"] = _autocompleteSection;
 
             if (_autocompleteSection != StringEnum.GetStringValue(ListItemAutocompleteType.SearchSuggestions))
-                if (_privateID != null) outputHash["id"] = _privateID;
+                if (_id != null) outputHash["id"] = _id;
 
             return outputHash;
         }
@@ -82,9 +82,9 @@ namespace ConstructorIO
         {
             HashArgs outputHash = new HashArgs();
 
-            if(_privateID != null)
+            if(_id != null)
             {
-                outputHash["id"] = _privateID;
+                outputHash["id"] = _id;
                 if(_name != null) outputHash["new_item_name"] = _name;
             }
             else
@@ -141,10 +141,10 @@ namespace ConstructorIO
             set { _description = value; }
         }
 
-        public string PrivateID
+        public string ID
         {
-            get { return _privateID; }
-            set { _privateID = value; }
+            get { return _id; }
+            set { _id = value; }
         }
 
         public List<string> Keywords

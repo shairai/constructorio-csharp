@@ -24,7 +24,7 @@ namespace ConstructorIO.Test
         {
             var api = TestCommon.MakeAPI();
 
-            ListItem testItem = new ListItem(PrivateID: "AddInvalid Test Item");
+            ListItem testItem = new ListItem(ID: "AddInvalid Test Item");
 
             Assert.IsTrue(api.AddOrUpdate(testItem), "Add Invalid Item");
             Task.Delay(TestDelay).Wait();
@@ -37,7 +37,7 @@ namespace ConstructorIO.Test
 
             ListItem testItem = new ListItem("AddRemove Test Item", ListItemAutocompleteType.Products)
             {
-                PrivateID = "AddRemoveTestItem",
+                ID = "AddRemoveTestItem",
                 Url = "http://test.com",
                 Description = "ExampleItem",
                 ImageUrl = "http://test.com/test.jpg"
@@ -102,7 +102,7 @@ namespace ConstructorIO.Test
 
             ListItem testItem = new ListItem("ModifyTestItem", ListItemAutocompleteType.Products)
             {
-                PrivateID = "ModifyTestItemID",
+                ID = "ModifyTestItemID",
                 Url = "http://test.com",
                 Description = "Example Item",
                 ImageUrl = "http://test.com/test.jpg"
@@ -128,7 +128,7 @@ namespace ConstructorIO.Test
 
             for (int i = 0; i < 5; i++)
             {
-                batchTestSet.Add(new ListItem(PrivateID: "BatchRemoveNum" + i)
+                batchTestSet.Add(new ListItem(ID: "BatchRemoveNum" + i)
                 {
                     Name = "BatchItemNum" + i,
                     Description = "Test Item",
@@ -143,7 +143,7 @@ namespace ConstructorIO.Test
             List<ListItem> removeSet = new List<ListItem>();
 
             for(int i=0;i<5;i++)
-                removeSet.Add(new ListItem(PrivateID:  "BatchRemoveNum" + i));
+                removeSet.Add(new ListItem(ID:  "BatchRemoveNum" + i));
 
             Assert.IsTrue(api.RemoveBatch(removeSet, ListItemAutocompleteType.Products));
             Task.Delay(TestDelay).Wait();
