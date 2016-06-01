@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace ConstructorIO.Test
 {
@@ -17,19 +18,22 @@ namespace ConstructorIO.Test
         [TestMethod]
         public void TestTrackConversion()
         {
-            var item = new ListItem("Test Conversion", ListItemAutocompleteType.SearchSuggestions);
-
             var api = TestCommon.MakeAPI();
-            Assert.IsTrue(api.Tracker.TrackConversion(item), "Track Conversion");
+            Assert.IsTrue(api.Tracker.TrackConversion("Test", "Search Suggestions"), "Track Conversion");
         }
 
         [TestMethod]
         public void TestTrackClickThrough()
         {
-            var item = new ListItem("Test Click Through", ListItemAutocompleteType.SearchSuggestions);
-
             var api = TestCommon.MakeAPI();
-            Assert.IsTrue(api.Tracker.TrackClickThrough(item), "Track Click Through");
+            Assert.IsTrue(api.Tracker.TrackClickThrough("Test", "Search Suggestions"), "Track Click Through");
+        }
+
+        [TestMethod]
+        public void TestTrackClickThroughWaithRevenue()
+        {
+            var api = TestCommon.MakeAPI();
+            Assert.IsTrue(api.Tracker.TrackClickThrough("Test", "Search Suggestions", new Dictionary<string, object>() { { "revenue", "500" } }), "Track Click Through");
         }
     }
 }
