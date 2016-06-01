@@ -24,20 +24,18 @@ namespace ConstructorIO
         public ListItem(string Name, ListItemAutocompleteType AutocompleteSection)
             :this(Name, StringEnum.GetStringValue(AutocompleteSection))
         {
-            
+
         }
 
-        public ListItem(string Name, string AutocompleteSection)
+        public ListItem(string Name = null, string AutocompleteSection = null, string PrivateID = null, string Description = null, string URL = null, string ImageURL = null)
             :this()
         {
             _originalName = _name = Name;
             _autocompleteSection = AutocompleteSection;
-        }
-
-        public ListItem(string PrivateID)
-            :this()
-        {
             _privateID = PrivateID;
+            _description = Description;
+            _url = URL;
+            _imageUrl = ImageURL;
         }
 
         public ListItem()
@@ -91,7 +89,7 @@ namespace ConstructorIO
             }
             else
             {
-                outputHash["item_name"] = _originalName;
+                if(_originalName != null) outputHash["item_name"] = _originalName;
                 outputHash["new_item_name"] = _name;
             }
             
