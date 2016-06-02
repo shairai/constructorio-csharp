@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="ConstructorIO.Tracker">
+    <Position X="0.5" Y="4.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEACACmQAAAAAEAAA=</HashCode>
+      <FileName>Logger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConstructorIO.ListItem">
+    <Position X="3.25" Y="2.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAYAIAAAAiBAAECAAAAAQAAAQAIAAACAAgUAAAiAA=</HashCode>
+      <FileName>ListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConstructorIO.ConstructorIOAPI">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BAIAAAAAADAAAQAACAgIBCEQAAAAAAAAAAAAAQAAAgA=</HashCode>
+      <FileName>ConstructorIOAPI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConstructorIO.WebRequestor">
+    <Position X="6.5" Y="5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAABAAAAAAAAAAAAIAAEACAAAAAIAAAAAAA=</HashCode>
+      <FileName>WebRequestor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConstructorIO.ConstructorIORequest">
+    <Position X="6.5" Y="2" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACABAACBAAAEAACABgAAABAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>ConstructorIORequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="ConstructorIO.ListItemAutocompleteType">
+    <Position X="0.5" Y="7.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>ListItemAutocompleteType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

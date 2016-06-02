@@ -7,8 +7,8 @@
     <ProjectGuid>{873E9441-B924-4C08-9ADD-ED71CB64A82E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>constructorio</RootNamespace>
-    <AssemblyName>constructorio</AssemblyName>
+    <RootNamespace>ConstructorIO</RootNamespace>
+    <AssemblyName>ConstructorIO</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,11 +44,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="constructorio.cs" />
+    <Compile Include="ConstructorIOAPI.cs" />
+    <Compile Include="ConstructorIORequest.cs" />
+    <Compile Include="ListItem.cs" />
+    <Compile Include="ListItemAutocompleteType.cs" />
+    <Compile Include="Tracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="WebRequestor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="ConstructorIORedesign.cd" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

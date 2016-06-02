@@ -13,7 +13,7 @@ namespace Sample_App__Add_Modify_Delete__
 {
     public partial class frmSample : Form
     {
-        public ConstructorIO m_constructorClient;
+        public ConstructorIOClient.ConstructorIO m_constructorClient;
 
         string m_sActionValue;
         string m_sOldName;
@@ -122,7 +122,7 @@ namespace Sample_App__Add_Modify_Delete__
             {
                 bool bResult;
 
-                m_constructorClient = new ConstructorIO(txtAPI.Text, txtKey.Text);
+                m_constructorClient = new ConstructorIOClient.ConstructorIO(txtAPI.Text, txtKey.Text);
 
                 switch (m_sActionValue)
                 {
