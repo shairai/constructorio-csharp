@@ -35,12 +35,12 @@ namespace ConstructorIO
         /// <param name="AutocompleteSection">The section this item belongs to.</param>
         /// <param name="ID">A private ID you can use to assosciate records</param>
         /// <param name="Description">A description of the ListItem</param>
-        /// <param name="URL">A URL for the ListItem</param>
-        /// <param name="ImageURL">An Image URL for the ListItem</param>
+        /// <param name="Url">A URL for the ListItem</param>
+        /// <param name="ImageUrl">An Image URL for the ListItem</param>
         /// <param name="SuggestedScore">Suggested score ranking for list item. Set to -1 to ignore. </param>
         /// <param name="Keywords">Keywords that represent your item</param>
         public ListItem(string Name = null, string AutocompleteSection = null, string ID = null,
-            string Description = null, string URL = null, string ImageURL = null, int SuggestedScore = -1,
+            string Description = null, string Url = null, string ImageUrl = null, int SuggestedScore = -1,
             IEnumerable<string> Keywords = null)
             :this()
         {
@@ -48,8 +48,8 @@ namespace ConstructorIO
             _autocompleteSection = AutocompleteSection;
             _id = ID;
             _description = Description;
-            _url = URL;
-            _imageUrl = ImageURL;
+            _url = Url;
+            _imageUrl = ImageUrl;
             _suggestedScore = SuggestedScore;
             if (Keywords != null) _keywords.AddRange(Keywords);
         }
