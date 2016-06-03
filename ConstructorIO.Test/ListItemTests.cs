@@ -31,6 +31,26 @@ namespace ConstructorIO.Test
         }
 
         [TestMethod]
+        public void TestCreateConstructor()
+        {
+            var api = TestCommon.MakeAPI();
+
+            ListItem testItem = new ListItem(ID: "AddInvalid Test Item", Name: "test-item", SuggestedScore: 50,
+                Description: "Sample Item", URL: "http://test.com", AutocompleteSection: "Products",
+                ImageURL: "http://test.com/test.jpg",
+                Keywords: new string[]
+                {
+                    "keyword_a",
+                    "keyword_b"
+                });
+
+            Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
+            Task.Delay(TestDelay).Wait();
+            Assert.IsTrue(api.Remove(testItem), "Remove Item");
+            Task.Delay(TestDelay).Wait();
+        }
+
+        [TestMethod]
         public void TestAddRemove()
         {
             var api = TestCommon.MakeAPI();
