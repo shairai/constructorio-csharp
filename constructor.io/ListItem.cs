@@ -27,7 +27,7 @@ namespace ConstructorIO
 
         }
 
-        public ListItem(string Name = null, string AutocompleteSection = null, string ID = null, string Description = null, string URL = null, string ImageURL = null)
+        public ListItem(string Name = null, string AutocompleteSection = null, string ID = null, string Description = null, string URL = null, string ImageURL = null, IEnumerable<string> Keywords = null)
             :this()
         {
             _originalName = _name = Name;
@@ -36,6 +36,7 @@ namespace ConstructorIO
             _description = Description;
             _url = URL;
             _imageUrl = ImageURL;
+            if (Keywords != null) _keywords.AddRange(Keywords);
         }
 
         public ListItem()
