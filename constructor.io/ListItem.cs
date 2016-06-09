@@ -168,6 +168,7 @@ namespace ConstructorIO
         public List<string> Keywords
         {
             get { return _keywords; }
+            set { _keywords = value; }
         }
 
         public int SuggestedScore
