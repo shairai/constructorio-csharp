@@ -7,23 +7,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ConstructorIOClient;
+using ConstructorIO;
 
 namespace Sample_App__Add_Modify_Delete__
 {
     public partial class frmSample : Form
     {
-        public ConstructorIOClient.ConstructorIO m_constructorClient;
+        public ConstructorIOAPI m_constructorClient;
 
         string m_sActionValue;
-        string m_sOldName;
-        List<string> m_arKeywords = new List<string>();
 
         public frmSample()
         {
             InitializeComponent();
             this.AlignText();
             pictureBoxLoading.BackColor = Color.Transparent;
+
+            dataGridViewData.Rows.Add();
             
         }
 
@@ -34,16 +34,10 @@ namespace Sample_App__Add_Modify_Delete__
 
         private void comboBoxAction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxAction.SelectedItem.ToString() == "Add")
-            {
-                if (dataGridViewData.Rows.Count == 0)
-                {
-                    dataGridViewData.Rows.Add();
-                }
-                this.InsertSampleData();
-            }
-
             m_sActionValue = comboBoxAction.SelectedItem.ToString();
+
+            bool isModify = m_sActionValue == "Modify ( name of item )";
+            dataGridViewData.Columns["new_item_name"].Visible = isModify;
         }
 
 
@@ -69,32 +63,44 @@ namespace Sample_App__Add_Modify_Delete__
             }            
         }
 
-        private Dictionary<string, object> LoadDataToDictionary()
+        private ListItem GetListItem()
         {
             Dictionary<string, object> objDic = new Dictionary<string, object>();
 
-            if(dataGridViewData.Rows[0].Cells["suggested_score"].Value != null)
-                objDic.Add("suggested_score", Convert.ToInt32(dataGridViewData.Rows[0].Cells["suggested_score"].Value));
+            var dgr = dataGridViewData.Rows[0];
 
-            if (dataGridViewData.Rows[0].Cells["keywords"].Value != null)
+            var newListItem = new ListItem(dgr.Cells["item_name"].Value.ToString(), dgr.Cells["autocomplete_section"].Value.ToString())
             {
-                this.GenerateListOfKeywords();
-                //objDic.Add("keywords:", "[" + m_arKeywords.ToString() + "]");
-                objDic.Add("keywords", "[\"a\",\"b\",\"c\"]");
+                Description = GetColumnValue(dgr, "description"),
+                Url = GetColumnValue(dgr, "url"),
+                ImageUrl = GetColumnValue(dgr, "image_url"),
+                ID = GetColumnValue(dgr, "id")
+            };
+
+            //If modify, and new name column isn't empty, 
+            if(m_sActionValue == "Modify ( name of item )" && GetColumnValue(dgr, "new_item_name") != null)
+                newListItem.Name = GetColumnValue(dgr, "new_item_name");
+
+            int suggestedScore;
+            if (GetColumnValue(dgr, "suggested_score") != null)
+                if (int.TryParse(GetColumnValue(dgr, "suggested_score"), out suggestedScore))
+                    newListItem.SuggestedScore = suggestedScore;
+
+            if(GetColumnValue(dgr, "keywords") != null)
+                newListItem.Keywords = GetColumnValue(dgr, "keywords").Split(',').ToList();
+
+            return newListItem;
+        }
+
+        private string GetColumnValue(DataGridViewRow dataGridRow, string columnName)
+        {
+            if (dataGridRow.DataGridView.Columns.Contains(columnName) && dataGridRow.Cells[columnName].Value != null)
+            {
+                var value = dataGridRow.Cells[columnName].Value.ToString();
+                if (string.IsNullOrWhiteSpace(value)) return null;
+                return value;
             }
-            if (dataGridViewData.Rows[0].Cells["url"].Value != null)
-                objDic.Add("url", dataGridViewData.Rows[0].Cells["url"].Value);
-
-            if (dataGridViewData.Rows[0].Cells["image_url"].Value != null)
-                objDic.Add("image_url", dataGridViewData.Rows[0].Cells["image_url"].Value.ToString());
-
-            if (dataGridViewData.Rows[0].Cells["description"].Value != null)
-                objDic.Add("description", dataGridViewData.Rows[0].Cells["description"].Value.ToString());
-
-            if (dataGridViewData.Rows[0].Cells["id"].Value != null)
-                objDic.Add("id", dataGridViewData.Rows[0].Cells["id"].Value.ToString());
-
-            return objDic;
+            return null;
         }
 
         private void AlignText()
@@ -110,45 +116,40 @@ namespace Sample_App__Add_Modify_Delete__
             this.Close();
         }
 
-        private void btnProcess_Click(object sender, EventArgs e)
+        private async void btnProcess_Click(object sender, EventArgs e)
         {
             pictureBoxLoading.Visible = true;
-            backgroundWorker.RunWorkerAsync();
-        }
 
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
             try
             {
-                bool bResult;
+                bool bResult = false;
 
-                m_constructorClient = new ConstructorIOClient.ConstructorIO(txtAPI.Text, txtKey.Text);
+                m_constructorClient = new ConstructorIOAPI(txtAPI.Text, txtKey.Text);
+                ListItem createdItem = GetListItem();
 
                 switch (m_sActionValue)
                 {
                     case "Add":
-                           bResult = m_constructorClient.Add(dataGridViewData.Rows[0].Cells["item_name"].Value.ToString(), dataGridViewData.Rows[0].Cells["autocomplete_section"].Value.ToString(), this.LoadDataToDictionary());
+                        bResult = await m_constructorClient.AddAsync(createdItem);
                         break;
                     case "Modify ( name of item )":
-                        if(dataGridViewData.Rows[0].Cells["autocomplete_section"].Value.ToString() == "Products")
-                            bResult = m_constructorClient.Modify(m_sOldName, dataGridViewData.Rows[0].Cells["item_name"].Value.ToString(), dataGridViewData.Rows[0].Cells["autocomplete_section"].Value.ToString(), this.LoadDataToDictionary());
-                        else
-                            bResult = m_constructorClient.Modify(m_sOldName, dataGridViewData.Rows[0].Cells["item_name"].Value.ToString(), dataGridViewData.Rows[0].Cells["autocomplete_section"].Value.ToString());
+                        bResult = await m_constructorClient.ModifyAsync(createdItem);
                         break;
                     case "Delete":
-                        bResult = m_constructorClient.Remove(dataGridViewData.Rows[0].Cells["item_name"].Value.ToString(), dataGridViewData.Rows[0].Cells["autocomplete_section"].Value.ToString());
+                        bResult = await m_constructorClient.RemoveAsync(createdItem);
                         break;
                 }
 
+                if(bResult)
+                {
+                    MessageBox.Show("Success.");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
-        }
 
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
             pictureBoxLoading.Visible = false;
         }
 
@@ -200,16 +201,22 @@ namespace Sample_App__Add_Modify_Delete__
             this.ClearData();
         }
 
-        private void dataGridViewData_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private async void btnVerify_Click(object sender, EventArgs e)
         {
-            if (e.ColumnIndex == 0)
-                m_sOldName = dataGridViewData[0, 0].Value.ToString();
-        }
+            m_constructorClient = new ConstructorIOAPI(txtAPI.Text, txtKey.Text);
 
-        private List<string> GenerateListOfKeywords()
-        {
-           m_arKeywords = ((string[])(dataGridViewData.Rows[0].Cells["keywords"].Value.ToString().Split(','))).ToList();
-           return ((string[])(dataGridViewData.Rows[0].Cells["keywords"].Value.ToString().Split(','))).ToList();
+            try
+            {
+                bool success = await m_constructorClient.VerifyAsync();
+                if(success)
+                {
+                    MessageBox.Show("Valid Credentials");
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.ToString());
+            }
         }
     }
 }

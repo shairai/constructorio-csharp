@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSample));
             this.grpKeys = new System.Windows.Forms.GroupBox();
+            this.btnVerify = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtKey = new System.Windows.Forms.TextBox();
             this.txtAPI = new System.Windows.Forms.TextBox();
@@ -38,6 +39,7 @@
             this.comboBoxType = new System.Windows.Forms.ComboBox();
             this.dataGridViewData = new System.Windows.Forms.DataGridView();
             this.item_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.new_item_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.autocomplete_section = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.suggested_score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.keywords = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -50,13 +52,11 @@
             this.btnProcess = new System.Windows.Forms.Button();
             this.comboBoxAction = new System.Windows.Forms.ComboBox();
             this.btnExit = new System.Windows.Forms.Button();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.chkRequired = new System.Windows.Forms.CheckBox();
             this.chkOptional = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnVerify = new System.Windows.Forms.Button();
             this.grpKeys.SuspendLayout();
             this.grpUpload.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewData)).BeginInit();
@@ -80,6 +80,16 @@
             this.grpKeys.TabIndex = 8;
             this.grpKeys.TabStop = false;
             this.grpKeys.Text = "1. Enter keys";
+            // 
+            // btnVerify
+            // 
+            this.btnVerify.Location = new System.Drawing.Point(233, 27);
+            this.btnVerify.Name = "btnVerify";
+            this.btnVerify.Size = new System.Drawing.Size(75, 23);
+            this.btnVerify.TabIndex = 5;
+            this.btnVerify.Text = "Verify";
+            this.btnVerify.UseVisualStyleBackColor = true;
+            this.btnVerify.Click += new System.EventHandler(this.btnVerify_Click);
             // 
             // label1
             // 
@@ -145,6 +155,7 @@
             this.dataGridViewData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.item_name,
+            this.new_item_name,
             this.autocomplete_section,
             this.suggested_score,
             this.keywords,
@@ -156,7 +167,6 @@
             this.dataGridViewData.Name = "dataGridViewData";
             this.dataGridViewData.Size = new System.Drawing.Size(1044, 203);
             this.dataGridViewData.TabIndex = 10;
-            this.dataGridViewData.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridViewData_CellBeginEdit);
             this.dataGridViewData.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // item_name
@@ -164,6 +174,12 @@
             this.item_name.HeaderText = "Item Name ( The name of the item, as it will appear in the autocomplete suggestio" +
     "ns ) Requred";
             this.item_name.Name = "item_name";
+            // 
+            // new_item_name
+            // 
+            this.new_item_name.HeaderText = "New Name (When modifying an existing item you can give it a new name)";
+            this.new_item_name.Name = "new_item_name";
+            this.new_item_name.Visible = false;
             // 
             // autocomplete_section
             // 
@@ -271,11 +287,6 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -331,15 +342,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "3. Parameters";
             // 
-            // btnVerify
-            // 
-            this.btnVerify.Location = new System.Drawing.Point(233, 27);
-            this.btnVerify.Name = "btnVerify";
-            this.btnVerify.Size = new System.Drawing.Size(75, 23);
-            this.btnVerify.TabIndex = 5;
-            this.btnVerify.Text = "Verify";
-            this.btnVerify.UseVisualStyleBackColor = true;
-            // 
             // frmSample
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -387,11 +389,15 @@
         private System.Windows.Forms.Button btnProcess;
         private System.Windows.Forms.ComboBox comboBoxAction;
         private System.Windows.Forms.Button btnExit;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox pictureBoxLoading;
+        private System.Windows.Forms.CheckBox chkOptional;
+        private System.Windows.Forms.CheckBox chkRequired;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button btnVerify;
         private System.Windows.Forms.DataGridViewTextBoxColumn item_name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn new_item_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn autocomplete_section;
         private System.Windows.Forms.DataGridViewTextBoxColumn suggested_score;
         private System.Windows.Forms.DataGridViewTextBoxColumn keywords;
@@ -399,10 +405,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn image_url;
         private System.Windows.Forms.DataGridViewTextBoxColumn description;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.CheckBox chkOptional;
-        private System.Windows.Forms.CheckBox chkRequired;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btnVerify;
     }
 }
 
