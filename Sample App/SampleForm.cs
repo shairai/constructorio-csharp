@@ -201,7 +201,10 @@ namespace Sample_App
                 Url: TryGetColumn(datagridRow, "Url"),
                 ImageUrl: TryGetColumn(datagridRow, "ImageUrl"));
 
-            foreach(DataGridViewColumn column in datagridRow.DataGridView.Columns)
+            if (TryGetColumn(datagridRow, "keywords") != null)
+                newItem.Keywords = TryGetColumn(datagridRow, "Keywords").Split(';').ToList();
+
+            foreach (DataGridViewColumn column in datagridRow.DataGridView.Columns)
             {
                 if (column.Name != "Name" && column.Name != "Description" && column.Name != "ID" && column.Name != "Url" && column.Name != "ImageUrl")
                 {
