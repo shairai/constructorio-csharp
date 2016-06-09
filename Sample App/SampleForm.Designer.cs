@@ -34,8 +34,8 @@
             this.btnUpload = new System.Windows.Forms.Button();
             this.openFileDialogCSV = new System.Windows.Forms.OpenFileDialog();
             this.btnExit = new System.Windows.Forms.Button();
-            this.backgroundWorkerUploadCSV = new System.ComponentModel.BackgroundWorker();
             this.grpUpload = new System.Windows.Forms.GroupBox();
+            this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxType = new System.Windows.Forms.ComboBox();
             this.grpCSV = new System.Windows.Forms.GroupBox();
@@ -48,16 +48,15 @@
             this.txtAPIToken = new System.Windows.Forms.TextBox();
             this.lblKeyAPI = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.backgroundWorkerVerify = new System.ComponentModel.BackgroundWorker();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
+            this.btnUploadUpdate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCSVData)).BeginInit();
             this.grpUpload.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
             this.grpCSV.SuspendLayout();
             this.grpKeys.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridViewCSVData
@@ -85,11 +84,11 @@
             // 
             // btnUpload
             // 
-            this.btnUpload.Location = new System.Drawing.Point(235, 27);
+            this.btnUpload.Location = new System.Drawing.Point(223, 12);
             this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(75, 23);
+            this.btnUpload.Size = new System.Drawing.Size(87, 23);
             this.btnUpload.TabIndex = 2;
-            this.btnUpload.Text = "Upload";
+            this.btnUpload.Text = "Add";
             this.btnUpload.UseVisualStyleBackColor = true;
             this.btnUpload.Click += new System.EventHandler(this.btnUpload_Click);
             // 
@@ -107,13 +106,9 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
-            // backgroundWorkerUploadCSV
-            // 
-            this.backgroundWorkerUploadCSV.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerUploadCSV_DoWork);
-            this.backgroundWorkerUploadCSV.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerUploadCSV_RunWorkerCompleted);
-            // 
             // grpUpload
             // 
+            this.grpUpload.Controls.Add(this.btnUploadUpdate);
             this.grpUpload.Controls.Add(this.pictureBoxLoading);
             this.grpUpload.Controls.Add(this.label1);
             this.grpUpload.Controls.Add(this.comboBoxType);
@@ -125,10 +120,23 @@
             this.grpUpload.TabStop = false;
             this.grpUpload.Text = "3. Upload";
             // 
+            // pictureBoxLoading
+            // 
+            this.pictureBoxLoading.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBoxLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBoxLoading.Image = global::Sample_App.Properties.Resources.ajax_loader;
+            this.pictureBoxLoading.Location = new System.Drawing.Point(321, 13);
+            this.pictureBoxLoading.Name = "pictureBoxLoading";
+            this.pictureBoxLoading.Size = new System.Drawing.Size(47, 47);
+            this.pictureBoxLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxLoading.TabIndex = 16;
+            this.pictureBoxLoading.TabStop = false;
+            this.pictureBoxLoading.Visible = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 32);
+            this.label1.Location = new System.Drawing.Point(8, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 13);
             this.label1.TabIndex = 4;
@@ -141,9 +149,9 @@
             this.comboBoxType.Items.AddRange(new object[] {
             "Products",
             "Search Suggestions"});
-            this.comboBoxType.Location = new System.Drawing.Point(86, 27);
+            this.comboBoxType.Location = new System.Drawing.Point(11, 40);
             this.comboBoxType.Name = "comboBoxType";
-            this.comboBoxType.Size = new System.Drawing.Size(143, 21);
+            this.comboBoxType.Size = new System.Drawing.Size(206, 21);
             this.comboBoxType.TabIndex = 3;
             this.comboBoxType.SelectedIndexChanged += new System.EventHandler(this.comboBoxType_SelectedIndexChanged);
             this.comboBoxType.SelectedValueChanged += new System.EventHandler(this.comboBoxType_SelectedValueChanged);
@@ -244,10 +252,6 @@
             this.panel1.Size = new System.Drawing.Size(1010, 41);
             this.panel1.TabIndex = 15;
             // 
-            // backgroundWorkerVerify
-            // 
-            this.backgroundWorkerVerify.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerVerify_DoWork);
-            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -259,18 +263,15 @@
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
             // 
-            // pictureBoxLoading
+            // btnUploadUpdate
             // 
-            this.pictureBoxLoading.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBoxLoading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBoxLoading.Image = global::Sample_App.Properties.Resources.ajax_loader;
-            this.pictureBoxLoading.Location = new System.Drawing.Point(321, 13);
-            this.pictureBoxLoading.Name = "pictureBoxLoading";
-            this.pictureBoxLoading.Size = new System.Drawing.Size(47, 47);
-            this.pictureBoxLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBoxLoading.TabIndex = 16;
-            this.pictureBoxLoading.TabStop = false;
-            this.pictureBoxLoading.Visible = false;
+            this.btnUploadUpdate.Location = new System.Drawing.Point(223, 38);
+            this.btnUploadUpdate.Name = "btnUploadUpdate";
+            this.btnUploadUpdate.Size = new System.Drawing.Size(87, 23);
+            this.btnUploadUpdate.TabIndex = 17;
+            this.btnUploadUpdate.Text = "Add Or Update";
+            this.btnUploadUpdate.UseVisualStyleBackColor = true;
+            this.btnUploadUpdate.Click += new System.EventHandler(this.btnUploadUpdate_Click);
             // 
             // SampleForm
             // 
@@ -291,13 +292,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCSVData)).EndInit();
             this.grpUpload.ResumeLayout(false);
             this.grpUpload.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).EndInit();
             this.grpCSV.ResumeLayout(false);
             this.grpCSV.PerformLayout();
             this.grpKeys.ResumeLayout(false);
             this.grpKeys.PerformLayout();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -309,7 +310,6 @@
         private System.Windows.Forms.Button btnUpload;
         private System.Windows.Forms.OpenFileDialog openFileDialogCSV;
         private System.Windows.Forms.Button btnExit;
-        private System.ComponentModel.BackgroundWorker backgroundWorkerUploadCSV;
         private System.Windows.Forms.GroupBox grpUpload;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxType;
@@ -324,8 +324,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnVerify;
-        private System.ComponentModel.BackgroundWorker backgroundWorkerVerify;
         private System.Windows.Forms.PictureBox pictureBoxLoading;
+        private System.Windows.Forms.Button btnUploadUpdate;
     }
 }
 
