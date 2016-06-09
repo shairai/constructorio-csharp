@@ -194,12 +194,22 @@ namespace Sample_App
         /// <param name="objDic"></param>
         private ListItem RowToListItem(DataGridViewRow datagridRow)
         {
-            return new ListItem(
+            var newItem = new ListItem(
                 Name: TryGetColumn(datagridRow, "Name"),
                 Description: TryGetColumn(datagridRow, "Description"),
                 ID: TryGetColumn(datagridRow, "ID"),
                 Url: TryGetColumn(datagridRow, "Url"),
                 ImageUrl: TryGetColumn(datagridRow, "ImageUrl"));
+
+            foreach(DataGridViewColumn column in datagridRow.DataGridView.Columns)
+            {
+                if (column.Name != "Name" && column.Name != "Description" && column.Name != "ID" && column.Name != "Url" && column.Name != "ImageUrl")
+                {
+                    newItem[column.Name] = datagridRow.Cells[column.Name].Value;
+                }
+            }
+
+            return newItem;
         }
 
         private string TryGetColumn(DataGridViewRow datagridRow, string ColumnName)
