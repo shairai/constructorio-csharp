@@ -106,7 +106,6 @@
             this.txtKey.Name = "txtKey";
             this.txtKey.Size = new System.Drawing.Size(143, 20);
             this.txtKey.TabIndex = 2;
-            this.txtKey.Text = "5tHZR5xflF6bNLgvpa60";
             // 
             // txtAPI
             // 
@@ -114,7 +113,6 @@
             this.txtAPI.Name = "txtAPI";
             this.txtAPI.Size = new System.Drawing.Size(143, 20);
             this.txtAPI.TabIndex = 1;
-            this.txtAPI.Text = "UuXqlIafeKvwop6DaRwP";
             // 
             // label2
             // 

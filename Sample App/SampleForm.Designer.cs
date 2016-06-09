@@ -35,6 +35,7 @@
             this.openFileDialogCSV = new System.Windows.Forms.OpenFileDialog();
             this.btnExit = new System.Windows.Forms.Button();
             this.grpUpload = new System.Windows.Forms.GroupBox();
+            this.btnUploadUpdate = new System.Windows.Forms.Button();
             this.pictureBoxLoading = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxType = new System.Windows.Forms.ComboBox();
@@ -49,7 +50,6 @@
             this.lblKeyAPI = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnUploadUpdate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCSVData)).BeginInit();
             this.grpUpload.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLoading)).BeginInit();
@@ -119,6 +119,16 @@
             this.grpUpload.TabIndex = 4;
             this.grpUpload.TabStop = false;
             this.grpUpload.Text = "3. Upload";
+            // 
+            // btnUploadUpdate
+            // 
+            this.btnUploadUpdate.Location = new System.Drawing.Point(223, 38);
+            this.btnUploadUpdate.Name = "btnUploadUpdate";
+            this.btnUploadUpdate.Size = new System.Drawing.Size(87, 23);
+            this.btnUploadUpdate.TabIndex = 17;
+            this.btnUploadUpdate.Text = "Add Or Update";
+            this.btnUploadUpdate.UseVisualStyleBackColor = true;
+            this.btnUploadUpdate.Click += new System.EventHandler(this.btnUploadUpdate_Click);
             // 
             // pictureBoxLoading
             // 
@@ -224,7 +234,6 @@
             this.txtKey.Name = "txtKey";
             this.txtKey.Size = new System.Drawing.Size(143, 20);
             this.txtKey.TabIndex = 2;
-            this.txtKey.Text = "5tHZR5xflF6bNLgvpa60";
             // 
             // txtAPIToken
             // 
@@ -232,7 +241,6 @@
             this.txtAPIToken.Name = "txtAPIToken";
             this.txtAPIToken.Size = new System.Drawing.Size(143, 20);
             this.txtAPIToken.TabIndex = 1;
-            this.txtAPIToken.Text = "UuXqlIafeKvwop6DaRwP";
             // 
             // lblKeyAPI
             // 
@@ -262,16 +270,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
-            // 
-            // btnUploadUpdate
-            // 
-            this.btnUploadUpdate.Location = new System.Drawing.Point(223, 38);
-            this.btnUploadUpdate.Name = "btnUploadUpdate";
-            this.btnUploadUpdate.Size = new System.Drawing.Size(87, 23);
-            this.btnUploadUpdate.TabIndex = 17;
-            this.btnUploadUpdate.Text = "Add Or Update";
-            this.btnUploadUpdate.UseVisualStyleBackColor = true;
-            this.btnUploadUpdate.Click += new System.EventHandler(this.btnUploadUpdate_Click);
             // 
             // SampleForm
             // 
