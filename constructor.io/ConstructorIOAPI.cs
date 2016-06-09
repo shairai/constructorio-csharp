@@ -215,6 +215,17 @@ namespace ConstructorIO
         }
 
         /// <summary>
+        /// Adds multiple items in one batch upload.
+        /// </summary>
+        /// <param name="Items">The items to add.</param>
+        /// <param name="AutocompleteSection">The section the items should be added to.</param>
+        /// <returns>true if successful</returns>
+        public async Task<bool> AddBatchAsync(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
+        {
+            return await AddBatchAsync(Items, StringEnum.GetStringValue(AutocompleteSection));
+        }
+
+        /// <summary>
         /// Adds or Updates multiple items in one batch.
         /// </summary>
         /// <param name="Items">The items to add or update.</param>
@@ -234,6 +245,17 @@ namespace ConstructorIO
         public bool AddOrUpdateBatch(IEnumerable<ListItem> Items, string AutocompleteSection)
         {
             return AddOrUpdateBatchAsync(Items, AutocompleteSection).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Adds or Updates multiple items in one batch.
+        /// </summary>
+        /// <param name="Items">The items to add or update.</param>
+        /// <param name="AutocompleteSection">The section the items should be added to.</param>
+        /// <returns>true if successful</returns>
+        public async Task<bool> AddOrUpdateBatchAsync(IEnumerable<ListItem> Items, ListItemAutocompleteType AutocompleteSection)
+        {
+            return await AddOrUpdateBatchAsync(Items, StringEnum.GetStringValue(AutocompleteSection));
         }
 
         /// <summary>

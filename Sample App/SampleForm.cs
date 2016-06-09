@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ConstructorIOClient;
+using ConstructorIO;
 using System.Collections;
 using System.IO;
 using System.Windows.Controls;
@@ -19,25 +19,8 @@ namespace Sample_App
     {
         private string m_sFileNameCSV;
         private DataTable m_dtCSVData;
-        public ConstructorIOClient.ConstructorIO m_constructorClient;
-        public ConstructorIOClient.ConstructorIO.AutoCompleteListType m_currentType;
-
-        private class Item
-        {
-            public string Text;
-            public ConstructorIOClient.ConstructorIO.AutoCompleteListType CurrentType;
-
-            public Item(string sName, ConstructorIOClient.ConstructorIO.AutoCompleteListType acltType)
-            {
-                Text = sName;
-                CurrentType = acltType;
-            }
-
-            public ConstructorIOClient.ConstructorIO.AutoCompleteListType GetListType()
-            {
-                return CurrentType;
-            }
-        };
+        public ConstructorIOAPI m_constructorClient;
+        public ListItemAutocompleteType m_currentType;
 
         /// <summary>
         /// Sample Form
@@ -47,12 +30,6 @@ namespace Sample_App
             m_dtCSVData = new DataTable();
 
             InitializeComponent();
-
-
-
-            ConstructorIOClient.ConstructorIO c = new ConstructorIOClient.ConstructorIO("", "");
-            bool valid = c.Verify();
-            c.Add("a", "b");
         }
 
         /// <summary>
@@ -60,7 +37,7 @@ namespace Sample_App
         /// </summary>
         private void Init()
         {
-            m_constructorClient = new ConstructorIOClient.ConstructorIO(txtAPIToken.Text, txtKey.Text);
+            m_constructorClient = new ConstructorIOAPI(txtAPIToken.Text, txtKey.Text);
         }
 
         /// <summary>
@@ -114,7 +91,7 @@ namespace Sample_App
             {
                 char cDelimiter = ',';
                 object[] arData;
-                string[] sLine = lCSV[0].Split(cDelimiter);
+                string[] sLine = lCSV[0].Split(new char[] { cDelimiter }, StringSplitOptions.RemoveEmptyEntries);
 
                 m_dtCSVData.Clear();
                 m_dtCSVData.Columns.Clear();
@@ -130,6 +107,8 @@ namespace Sample_App
                     m_dtCSVData.Rows.Add(arData);
                 }
                 dataGridViewCSVData.DataSource = m_dtCSVData;
+
+                m_dtCSVData.EndLoadData();
             }
             catch(Exception ex)
             {
@@ -152,39 +131,37 @@ namespace Sample_App
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnUpload_Click(object sender, EventArgs e)
+        private async void btnUpload_Click(object sender, EventArgs e)
         {
             this.Init();
             pictureBoxLoading.Visible = true;
-            backgroundWorkerUploadCSV.RunWorkerAsync(ConvertToType(comboBoxType.SelectedItem.ToString()));
+            bool success = await this.ProcessUpload(m_currentType, false);
+            if(success)
+            {
+                MessageBox.Show("Sucessfully uploaded.");
+            }
+            else
+            {
+
+            }
+
+            pictureBoxLoading.Visible = false;
         }
 
-        /// <summary>
-        /// backgroundWorkerUploadCSV_DoWork
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void backgroundWorkerUploadCSV_DoWork(object sender, DoWorkEventArgs e)
+        private async void btnUploadUpdate_Click(object sender, EventArgs e)
         {
-            ConstructorIOClient.ConstructorIO.AutoCompleteListType arg = (ConstructorIOClient.ConstructorIO.AutoCompleteListType)e.Argument;
-            try
+            this.Init();
+            pictureBoxLoading.Visible = true;
+            bool success = await this.ProcessUpload(m_currentType, true);
+            if (success)
             {
-                this.ProcessUpload((ConstructorIOClient.ConstructorIO.AutoCompleteListType)e.Argument);
+                MessageBox.Show("Sucessfully uploaded.");
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.ToString());
-                
-            }
-        }
 
-        /// <summary>
-        /// backgroundWorkerUploadCSV_RunWorkerCompleted
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void backgroundWorkerUploadCSV_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
+            }
+
             pictureBoxLoading.Visible = false;
         }
 
@@ -192,129 +169,79 @@ namespace Sample_App
         /// ProcessUpload
         /// </summary>
         /// <param name="atType"></param>
-        private void ProcessUpload(ConstructorIOClient.ConstructorIO.AutoCompleteListType atType)
+        private async Task<bool> ProcessUpload(ListItemAutocompleteType atType, bool updateExisting)
         {
             try
             {
-                if (atType == ConstructorIOClient.ConstructorIO.AutoCompleteListType.SearchSuggestions)
-                {
-                    m_dtCSVData.EndLoadData();
+                var datagridRows = dataGridViewCSVData.Rows.Cast<DataGridViewRow>();
+                var mappedElements = datagridRows.Select(dgr => RowToListItem(dgr));
 
-                    List<object> lDictionary = new List<object>();
-                    Dictionary<string, object> objDic = new Dictionary<string, object>();
-                    Dictionary<string, object> objParams = new Dictionary<string, object>();
-                    this.LoadData(ref objParams);
-
-                    for (int i = 0; i < dataGridViewCSVData.Rows.Count; i++)
-                    {
-                        if (null != dataGridViewCSVData.Rows[i].Cells[0].Value)
-                        {
-                            Dictionary<string, object> value = ConstructorIOClient.ConstructorIO.CreateItemParams(dataGridViewCSVData.Rows[i].Cells[0].Value.ToString(), "Search Suggestions", false, objParams);
-                            lDictionary.Add(value);
-                        }
-                    }
-
-                    object[] sItems = lDictionary.ToArray();
-                    objDic.Add("items", sItems);
-                    bool bSuccess = m_constructorClient.AddBatch(objDic, StringEnum.GetStringValue(ConstructorIOClient.ConstructorIO.AutoCompleteListType.SearchSuggestions));
-                }
-
-                if (atType == ConstructorIOClient.ConstructorIO.AutoCompleteListType.Product)
-                {
-                    m_dtCSVData.EndLoadData();
-
-                    List<object> lDictionary = new List<object>();
-                    Dictionary<string, object> objDic = new Dictionary<string, object>();
-                    Dictionary<string, object> objParams = new Dictionary<string, object>();
-
-                    this.LoadData(ref objParams);
-                    for (int i = 0; i < dataGridViewCSVData.Rows.Count; i++)
-                    {
-                        if (null != dataGridViewCSVData.Rows[i].Cells[0].Value)
-                        {
-                            Dictionary<string, object> value = ConstructorIOClient.ConstructorIO.CreateItemParams(dataGridViewCSVData.Rows[i].Cells[0].Value.ToString(), "Products", false, objParams);
-                            lDictionary.Add(value);
-                        }
-                    }
-
-                    object[] sItems = lDictionary.ToArray();
-                    objDic.Add("items", sItems);
-                    bool bSuccess = m_constructorClient.AddBatch(objDic, StringEnum.GetStringValue(ConstructorIOClient.ConstructorIO.AutoCompleteListType.Product));
-                }
-
+                if (updateExisting)
+                    return await m_constructorClient.AddOrUpdateBatchAsync(mappedElements, atType);
+                else
+                    return await m_constructorClient.AddBatchAsync(mappedElements, atType);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                return false;
             }
         }
-
-        /// <summary>
-        /// ConvertToType
-        /// </summary>
-        /// <param name="sText"></param>
-        /// <returns>ConstructorIO.AutoCompleteListType</returns>
-        private ConstructorIOClient.ConstructorIO.AutoCompleteListType ConvertToType(string sText)
-        {
-            ConstructorIOClient.ConstructorIO.AutoCompleteListType objListType;
-
-            if (sText == "Products")
-                objListType = ConstructorIOClient.ConstructorIO.AutoCompleteListType.Product;
-            else
-                objListType = ConstructorIOClient.ConstructorIO.AutoCompleteListType.SearchSuggestions;
-
-            return objListType;
-        }
-
 
         /// <summary>
         /// LoadData
         /// </summary>
         /// <param name="objDic"></param>
-        private void LoadData(ref Dictionary<string, object> objDic)
+        private ListItem RowToListItem(DataGridViewRow datagridRow)
         {
-            if (this.m_currentType == ConstructorIOClient.ConstructorIO.AutoCompleteListType.Product)
+            var newItem = new ListItem(
+                Name: TryGetColumn(datagridRow, "Name"),
+                Description: TryGetColumn(datagridRow, "Description"),
+                ID: TryGetColumn(datagridRow, "ID"),
+                Url: TryGetColumn(datagridRow, "Url"),
+                ImageUrl: TryGetColumn(datagridRow, "ImageUrl"));
+
+            if (TryGetColumn(datagridRow, "keywords") != null)
+                newItem.Keywords = TryGetColumn(datagridRow, "Keywords").Split(';').ToList();
+
+            foreach (DataGridViewColumn column in datagridRow.DataGridView.Columns)
             {
-
-                if (dataGridViewCSVData.Rows[0].Cells["Score"].Value != null)
-                    objDic.Add("suggested_score", Convert.ToInt32(dataGridViewCSVData.Rows[0].Cells["Score"].Value));
-
-                if (dataGridViewCSVData.Rows[0].Cells["Url"].Value != null)
-                    objDic.Add("url", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Url"].Value));
-
-                if (dataGridViewCSVData.Rows[0].Cells["Image Url"].Value != null)
-                    objDic.Add("image_url", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Url"].Value));
-
-                if (dataGridViewCSVData.Rows[0].Cells["Description"].Value != null)
-                    objDic.Add("description", Convert.ToString(dataGridViewCSVData.Rows[0].Cells["Description"].Value));
+                if (column.Name != "Name" && column.Name != "Description" && column.Name != "ID" && column.Name != "Url" && column.Name != "ImageUrl")
+                {
+                    newItem[column.Name] = datagridRow.Cells[column.Name].Value;
+                }
             }
+
+            return newItem;
         }
 
-        private void btnVerify_Click(object sender, EventArgs e)
+        private string TryGetColumn(DataGridViewRow datagridRow, string ColumnName)
+        {
+            if(datagridRow.DataGridView.Columns.Contains(ColumnName) && datagridRow.Cells[ColumnName] != null)
+            {
+                return datagridRow.Cells[ColumnName].Value.ToString();
+            }
+            return null;
+        }
+
+        private async void btnVerify_Click(object sender, EventArgs e)
         {
             this.Init();
-            backgroundWorkerVerify.RunWorkerAsync();
-        }
-
-        private void backgroundWorkerVerify_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
+            bool result = await m_constructorClient.VerifyAsync();
+            if(result)
             {
-                if (m_constructorClient.Verify())
-                    MessageBox.Show("Successful authentication!");
-                else
-                    MessageBox.Show("Not successful authentication!");
+                MessageBox.Show("Valid Credentials.");
+                //TODO: Enable view
             }
-            catch (Exception ex)
+            else
             {
-
+                MessageBox.Show("Invalid Credentials.");
             }
-
         }
 
         private void comboBoxType_SelectedValueChanged(object sender, EventArgs e)
         {
-            this.m_currentType = ConvertToType(comboBoxType.SelectedItem.ToString());
+            Enum.TryParse<ListItemAutocompleteType>(comboBoxType.SelectedText, out this.m_currentType);
         }
 
         private void comboBoxType_SelectedIndexChanged(object sender, EventArgs e)
