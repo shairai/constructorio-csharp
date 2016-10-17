@@ -92,6 +92,25 @@ namespace ConstructorIO.Test
         }
 
         [TestMethod]
+        public void TestAddRemoveDescriptionWithQuote()
+        {
+            var api = TestCommon.MakeAPI();
+
+            ListItem testItem = new ListItem("AddRemove Test Item", ListItemAutocompleteType.Products)
+            {
+                ID = "AddRemoveTestItem",
+                Url = "http://test.com",
+                Description = "ExampleItem 1\"",
+                ImageUrl = "http://test.com/test.jpg"
+            };
+
+            Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
+            Task.Delay(TestDelay).Wait();
+            Assert.IsTrue(api.Remove(testItem), "Remove Item");
+            Task.Delay(TestDelay).Wait();
+        }
+
+        [TestMethod]
         public void TestModifyByName()
         {
             var api = TestCommon.MakeAPI();

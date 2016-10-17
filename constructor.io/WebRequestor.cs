@@ -50,7 +50,6 @@ namespace ConstructorIO
                 {
                     JObject jobj = JObject.FromObject(APIRequest.RequestBody);
                     jsonBody = jobj.ToString()
-                                    .Replace("\\\"", "\"")
                                     .Replace("\"[", "[")
                                     .Replace("]\"", "]");
                 }
@@ -59,7 +58,6 @@ namespace ConstructorIO
             {
                 throw new Exception("Error generating JSON body. See inner exception for details.", ex);
             }
-
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(requestURI);
