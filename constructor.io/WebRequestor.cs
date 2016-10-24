@@ -15,14 +15,16 @@ namespace ConstructorIO
         private WebClient _downloader;
 
         private string _apiKey;
-        private string _autocomlpeteKey;
+        private string _autocompleteKey;
+        private string _host;
         private string _lastBody;
 
-        internal WebRequestor(string APIKey, string AutocompleteKey)
+        internal WebRequestor(string APIKey, string AutocompleteKey, string Host)
         {
             _downloader = new WebClient();
             _apiKey = APIKey;
-            _autocomlpeteKey = AutocompleteKey;
+            _autocompleteKey = AutocompleteKey;
+            _host = Host;
         }
 
         internal async Task<Tuple<bool, string>> MakeRequest(ConstructorIORequest APIRequest)
@@ -35,7 +37,7 @@ namespace ConstructorIO
 
         internal async Task<Tuple<bool, string>> MakeRequest(ConstructorIORequest APIRequest, Func<HttpWebResponse, bool> ResponseCheck)
         {
-            Uri requestURI = APIRequest.GetURI(_autocomlpeteKey);
+            Uri requestURI = APIRequest.GetURI(_autocompleteKey, _host);
 
             bool validResponse = false;
             bool errorRaised = false;

@@ -14,23 +14,21 @@ namespace ConstructorIO
         private HashArgs _extraArgs;
         private HashArgs _requestBody;
         private string _uriScheme;
-        private string _uriHost;
 
         public ConstructorIORequest(APIRequestType APIRequest, string Method,
-            string Protocol = "https", string Host = "ac.cnstrc.com")
-            : this(StringEnum.GetStringValue(APIRequest), Method, Protocol, Host)
+            string Protocol = "https")
+            : this(StringEnum.GetStringValue(APIRequest), Method, Protocol)
         {
         }
 
         public ConstructorIORequest(string APIPath, string Method,
-                string Protocol = "https", string Host = "ac.cnstrc.com")
+                string Protocol = "https")
         {
             _apiPath = APIPath;
             _method = Method;
             _extraArgs = new HashArgs();
             _requestBody = new HashArgs();
             _uriScheme = Protocol;
-            _uriHost = Host;
         }
 
         public void AddParams(HashArgs ExtraParams)
@@ -46,13 +44,13 @@ namespace ConstructorIO
             _extraArgs.Add(Key, Value);
         }
 
-        internal Uri GetURI(string APIKey)
+        internal Uri GetURI(string APIKey, string Host)
         {
             var tempParams = new HashArgs(_extraArgs); //Create a new instance
             //Don't want to have the API key floating around in each object
             tempParams["autocomplete_key"] = APIKey;
             
-            var uriBuilder = new UriBuilder(_uriScheme, _uriHost)
+            var uriBuilder = new UriBuilder(_uriScheme, Host)
             {
                 Path = _apiPath,
                 Query = Util.SerializeParams(tempParams)

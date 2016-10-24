@@ -11,9 +11,9 @@ namespace ConstructorIO
         private WebRequestor _webRequestor;
         private Tracker _tracker;
 
-        public ConstructorIOAPI(string APIKey, string AutocompleteKey)
+        public ConstructorIOAPI(string APIKey, string AutocompleteKey, string Host = "ac.cnstrc.com")
         {
-            _webRequestor = new WebRequestor(APIKey, AutocompleteKey);
+            _webRequestor = new WebRequestor(APIKey, AutocompleteKey, Host);
             _tracker = new Tracker(this);
         }
 
