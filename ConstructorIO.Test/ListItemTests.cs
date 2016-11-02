@@ -73,6 +73,28 @@ namespace ConstructorIO.Test
         }
 
         [TestMethod]
+        public void TestDictionaryParameter()
+        {
+            var api = TestCommon.MakeAPI();
+
+            ListItem testItem = new ListItem(ID: "Add Test Item 3", Name: "test-item2",
+                Description: "Sample Item", Url: "http://test.com", AutocompleteSection: "Products",
+                ImageUrl: "http://test.com/test.jpg",
+                Metadata: new Dictionary<string, string>
+                {
+                    { "thing1", "this" },
+                    { "thing2", "that" }
+                });
+
+            testItem["suggested_score"] = 50;
+
+            Assert.IsTrue(api.AddOrUpdate(testItem), "Add Item");
+            Task.Delay(TestDelay).Wait();
+//            Assert.IsTrue(api.Remove(testItem), "Remove Item");
+//            Task.Delay(TestDelay).Wait();
+        }
+
+        [TestMethod]
         public void TestAddRemove()
         {
             var api = TestCommon.MakeAPI();
