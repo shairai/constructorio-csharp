@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BatchModel.cs" />
     <Compile Include="ConstructorIOAPI.cs" />
     <Compile Include="ConstructorIORequest.cs" />
     <Compile Include="ListItem.cs" />
